@@ -1,0 +1,131 @@
+<collection-template-facets
+  class='block bg-white px-4 lg:px-[80px] mx-auto pb-[40px]'
+  data-handle='{{collection.handle}}'
+>
+  <div class='lg:flex items-center justify-between lg:pl-[324px] mt-4 lg:mt-[40px]'>
+    <div class='collection-results text-[14px] lg:text-[18px] font-proximaRegular font-medium text-neutral800 leading-[150%]'>
+      1 -
+      <span class='collection-show-results'>
+        {% if collection.products_count < 27 %}
+          {{ collection.products_count }}
+        {% else %}
+          27
+        {% endif %}
+      </span>
+      of <span class='collection-total-results'>{{ collection.products_count }}</span> Results
+    </div>
+
+    <div class='flex justify-between'>
+      <button
+        class='cursor-pointer open-filters p-0 border-0 flex items-center lg:hidden !text-base'
+        aria-label='Open Filter'
+        tabindex='0'
+      >
+        Filter
+        <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
+          <path d="M10.0007 4.99992V3.33325M10.0007 4.99992C9.08018 4.99992 8.33398 5.74611 8.33398 6.66659C8.33398 7.58706 9.08018 8.33325 10.0007 8.33325M10.0007 4.99992C10.9211 4.99992 11.6673 5.74611 11.6673 6.66659C11.6673 7.58706 10.9211 8.33325 10.0007 8.33325M5.00065 14.9999C5.92113 14.9999 6.66732 14.2537 6.66732 13.3333C6.66732 12.4128 5.92113 11.6666 5.00065 11.6666M5.00065 14.9999C4.08018 14.9999 3.33398 14.2537 3.33398 13.3333C3.33398 12.4128 4.08018 11.6666 5.00065 11.6666M5.00065 14.9999V16.6666M5.00065 11.6666V3.33325M10.0007 8.33325V16.6666M15.0007 14.9999C15.9211 14.9999 16.6673 14.2537 16.6673 13.3333C16.6673 12.4128 15.9211 11.6666 15.0007 11.6666M15.0007 14.9999C14.0802 14.9999 13.334 14.2537 13.334 13.3333C13.334 12.4128 14.0802 11.6666 15.0007 11.6666M15.0007 14.9999V16.6666M15.0007 11.6666V3.33325" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class=''>
+        {% include 'sorting-facets' %}
+      </div>
+    </div>
+  </div>
+
+  <div
+    class='open-filters bottom-0 left-0 w-full !fixed z-[9] bg-[#5A7E5E] rounded-tl-[20px] rounded-tr-[20px] flex justify-center items-center lg:hidden py-4 text-[20px] font-proximaRegular font-medium text-white'
+    aria-label='Open Filter'
+    tabindex='0'
+  >
+    Filter
+    <span class='ml-2'>
+      <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
+        <path d="M10.0007 5.00004V3.33337M10.0007 5.00004C9.08018 5.00004 8.33398 5.74623 8.33398 6.66671C8.33398 7.58718 9.08018 8.33337 10.0007 8.33337M10.0007 5.00004C10.9211 5.00004 11.6673 5.74623 11.6673 6.66671C11.6673 7.58718 10.9211 8.33337 10.0007 8.33337M5.00065 15C5.92113 15 6.66732 14.2538 6.66732 13.3334C6.66732 12.4129 5.92113 11.6667 5.00065 11.6667M5.00065 15C4.08018 15 3.33398 14.2538 3.33398 13.3334C3.33398 12.4129 4.08018 11.6667 5.00065 11.6667M5.00065 15V16.6667M5.00065 11.6667V3.33337M10.0007 8.33337V16.6667M15.0007 15C15.9211 15 16.6673 14.2538 16.6673 13.3334C16.6673 12.4129 15.9211 11.6667 15.0007 11.6667M15.0007 15C14.0802 15 13.334 14.2538 13.334 13.3334C13.334 12.4129 14.0802 11.6667 15.0007 11.6667M15.0007 15V16.6667M15.0007 11.6667V3.33337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+
+  <div class='flex mt-6 lg:mt-[40px]'>
+    {% include 'facets' %}
+
+    <div
+      id='products-grid'
+      class='lg:pl-6 h-full items-grid relative grid grid-cols-2 lg:grid-cols-3  gap-x-[13px] lg:gap-x-6 gap-y-8 lg:gap-y-[56px] bg-white transition duration-500'
+    >
+      {% paginate collection.products by 27 %}
+        {% if collection.products_count == 0 %}
+          Sorry, we couldn't find any products that match your search criteria.
+        {% else %}
+          {% for product in collection.products %}
+            <div data-handle='{{product.handle}}' class='product-grid-item flex flex-col h-full relative'>
+              {% if product.tags contains 'proposal ready' %}
+                <div class='absolute badge-proposal top-0 right-0 inline-flex items-center py-[6px] px-[10px] bg-[#7D9282] rounded-[80px] text-[13px] text-white font-proximaBold font-semibold uppercase tracking-[0.5px]'>
+                  <svg
+                    width='18'
+                    height='19'
+                    viewBox='0 0 18 19'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                    class='mr-1'
+                  >
+                    <g id="sparkles">
+                    <path id="Icon" d="M3.75 2.66479V5.66479M2.25 4.16479H5.25M4.5 13.1648V16.1648M3 14.6648H6M9.75 2.66479L11.4643 7.80765L15.75 9.41479L11.4643 11.0219L9.75 16.1648L8.03571 11.0219L3.75 9.41479L8.03571 7.80765L9.75 2.66479Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                  </svg>
+                  proposal ready
+                </div>
+              {% endif %}
+
+              <div class='relative'>
+                <a href='{{product.url}}' class='block group'>
+                  <img src='{{product.featured_image | image_url: 'master'}}' alt='{{product.featured_image.alt}}'>
+                  {% if product.images[1] != blank %}
+                    {%
+                      render 'responsive-image' with
+                      image: product.images[1],
+                      image_class: 'hidden group-hover:!block absolute top-0 left-0 w-full h-full',
+                      image_width: '1500x'
+                    %}
+                  {% endif %}
+                </a>
+              </div>
+              <div class='product-grid-item__vendor text-center'>{{ product.vendor }}</div>
+              <a href='{{product.url}}' class='block product-grid-item__title text-center'>
+                <h3 class='text-dark product-grid-item__title block text-base'>{{ product.title }}</h3>
+              </a>
+
+              <div class='text-center product-grid-item__price'>{{ product.price | money }}</div>
+
+              {% if product.variants.size %}
+                <div class='flex justify-center product-grid-item__variants'>
+                  {% for variant in product.variants %}
+                    {% if variant.metafields.custom.image != blank %}
+                      {% for img in variant.metafields.custom.gallery_images.value %}
+                        {% if forloop.first %}
+                          {% assign metafield_img = img %}
+                        {% endif %}
+                      {% endfor %}
+                      <span
+                        class='{% if forloop.first %}active{% endif %}'
+                        data-price='{{variant.price | money}}'
+                        data-img='{{metafield_img | image_url: "master"}}'
+                      >
+                        {%
+                          render 'responsive-image' with
+                          image: variant.metafields.custom.image.value,
+                          image_class: 'lg:!w-[44px] lg:!h-[44px]',
+                          image_width: '1500x'
+                        %}
+                      </span>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</collection-template-facets>

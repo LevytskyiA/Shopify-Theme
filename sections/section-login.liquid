@@ -1,0 +1,220 @@
+<div class='flex bg-white pt-16 pb-16'>
+  <div class='flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24'>
+    <div class='mx-auto w-full max-w-sm lg:w-96'>
+      <div>
+        <h2 class='mt-6 text-3xl font-extrabold text-dark text-center'>SIGN INTO YOUR ACCOUNT</h2>
+      </div>
+
+      <div class='mt-6'>
+        {%- form 'customer_login', novalidate: 'novalidate' -%}
+          <div>
+            {%- if form.errors -%}
+              <h2 class='text-error font-bold text-lg' tabindex='-1'>
+                {{ 'templates.contact.form.error_heading' | t }}
+              </h2>
+              <span class='text-dark'>
+                {{ form.errors | default_errors }}
+              </span>
+            {%- endif -%}
+
+            <div>
+              <label class='hidden text-sm font-medium text-dark' for='CustomerEmail'> Email address </label>
+              <div class='mt-1'>
+                <input
+                  type='email'
+                  name='customer[email]'
+                  id='CustomerEmail'
+                  autocomplete='email'
+                  autocorrect='off'
+                  autocapitalize='off'
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                  {% if form.errors contains 'form' %}
+                    aria-invalid='true'
+                  {% endif %}
+                  placeholder='EMAIL'
+                >
+              </div>
+            </div>
+
+            {%- if form.password_needed -%}
+              <div class='space-y-1'>
+                <label class='hidden text-sm font-medium text-dark' for='CustomerPassword'> Password </label>
+                <div class='mt-1'>
+                  <input
+                    type='password'
+                    value=''
+                    name='customer[password]'
+                    id='CustomerPassword'
+                    class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                    autocomplete='current-password'
+                    {% if form.errors contains 'form' %}
+                      aria-invalid='true'
+                    {% endif %}
+                    placeholder='PASSWORD'
+                  >
+                </div>
+              </div>
+
+              <div class='flex items-center justify-end pt-3 pb-6'>
+                <div class='flex items-center'>
+                  <input
+                    id='remember-me'
+                    name='remember-me'
+                    type='checkbox'
+                    class='hidden h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded'
+                  >
+                  <label for='remember-me' class='ml-2 text-sm text-gray-900 hidden'></label>
+                </div>
+
+                <div class='text-sm'>
+                  <a id='forgot-password' href='#recover' class='font-medium text-dark hover:text-lightPrimaryBlue'>
+                    Forgot your password?
+                  </a>
+                </div>
+              </div>
+            {%- endif -%}
+            <div>
+              <button
+                type='submit'
+                class='button-white !bg-gold !px-6 !border-gold !text-white w-full font-bold hover:!bg-black hover:!border-black tracking-[1px]  flex justify-center py-2'
+              >
+                SIGN IN
+              </button>
+              <a
+                href='{{ routes.account_register_url }}'
+                class='block w-full text-center font-bold text-gold hover:text-dark mt-4'
+              >
+                CREATE ACCOUNT
+              </a>
+            </div>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<recover-modal class='relative z-10 hidden' aria-labelledby='modal-title' role='dialog' aria-modal='true'>
+  <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+  <div class='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'></div>
+
+  <div class='fixed z-10 inset-0 overflow-y-auto'>
+    <div class='flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0'>
+      <!--
+        Modal panel, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+      {%- form 'recover_customer_password' -%}
+        <div class='relative bg-white px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6'>
+          <div>
+            <div class='mt-3 text-center sm:mt-5'>
+              <h3 class='text-lg leading-6 font-bold text-dark' id='modal-title'>RESET YOUR PASSWORD</h3>
+              <div class='mt-2'>
+                <p class='text-sm text-dark mt-4'>
+                  PLEASE CONTACT US IF YOU HAVE ANY ISSUES WITH RESETTING YOUR PASSWORD.
+                </p>
+              </div>
+            </div>
+            <div class='space-y-6'>
+              {%- if form.errors -%}
+                <h2 class='text-error font-bold text-lg' tabindex='-1'>
+                  {{ 'templates.contact.form.error_heading' | t }}
+                </h2>
+                <span class='text-dark'>
+                  {{ form.errors | default_errors }}
+                </span>
+              {%- endif -%}
+
+              <div>
+                <label for='RecoverEmail' class='hidden text-sm font-medium text-lightPrimaryBlue'>
+                  {{ 'customer.login_page.email' | t }}
+                </label>
+                <input
+                  type='email'
+                  value=''
+                  name='email'
+                  id='RecoverEmail'
+                  autocorrect='off'
+                  autocapitalize='off'
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                  autocomplete='email'
+                  {% if form.errors %}
+                    aria-invalid='true'
+                    aria-describedby='RecoverEmail-email-error'
+                    autofocus
+                  {% endif %}
+                  placeholder='EMAIL'
+                >
+              </div>
+            </div>
+          </div>
+          <div class='mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense'>
+            <button
+              type='submit'
+              class='w-full button-primary inline-flex justify-center px-4 py-2 text-base font-medium text-dark sm:col-start-2 sm:text-sm'
+            >
+              SUBMIT
+            </button>
+            <button
+              id='cancel'
+              type='button'
+              class='mt-3 w-full button-primary inline-flex justify-center border px-4 py-2 bg-white text-base font-medium sm:mt-0 sm:col-start-1 sm:text-sm'
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</recover-modal>
+
+<script>
+  class RecoverModal extends HTMLElement {
+    constructor() {
+      super()
+    }
+
+    connectedCallback() {
+      document.querySelector('#forgot-password').addEventListener('click', () => {
+        this.classList.add('block')
+        this.classList.remove('hidden')
+      })
+      document.querySelector('#cancel').addEventListener('click', () => {
+        this.classList.add('hidden')
+        this.classList.remove('block')
+      })
+    }
+  }
+
+  customElements.define('recover-modal', RecoverModal)
+</script>
+
+{% schema %}
+{
+  "name": "Login",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
+}
+{% endschema %}

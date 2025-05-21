@@ -1,0 +1,421 @@
+<style>
+  #shopify-section-{{section.id}} {
+    background-color: {{section.settings.background_color}};
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px;
+    {% if section.settings.hide_desktop %}
+      display: none;
+    {% else %}
+      display: block;
+    {% endif %}
+  }
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+      padding-top:{{section.settings.mobile_padding_top}}px;
+      padding-bottom: {{section.settings.mobile_padding_bottom}}px;
+      {% if section.settings.hide_mobile %}
+        display: none;
+      {% else %}
+        display: block;
+      {% endif %}
+    }
+  }
+</style>
+
+<div
+  class='{{ section.settings.desktop_max_width }} mx-auto'
+>
+  <div class='flex flex-col justify-center'>
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+          <h2
+            style='color: {{block.settings.text_color}}'
+            class='{{ block.settings.heading_size }} {{block.settings.font_weight}} {{block.settings.mobile_alignment}} md:{{block.settings.desktop_alignment}} pb-3'
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.heading | replace: '&lt;', '<' | replace: '&gt;', '>' }}
+          </h2>
+        {%- when 'text' -%}
+          <div
+            style='color: {{block.settings.text_color}}'
+            class='pb-3 {{block.settings.mobile_alignment}} md:{{block.settings.desktop_alignment}} text-base'
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.text | replace: '&lt;', '<' | replace: '&gt;', '>' }}
+          </div>
+        {%- when 'button' -%}
+          <div class='{{block.settings.mobile_alignment}} md:{{block.settings.desktop_alignment}} block'>
+            <a
+              {% if block.settings.button_link == blank %}
+                role='link' aria-disabled='true'
+              {% else %}
+                href='{{ block.settings.button_link }}'
+              {% endif %}
+              class='{{block.settings.button_style}} inline-block relative'
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.button_label | escape }}
+            </a>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.rich-text.name",
+  "tag": "section",
+  "class": "px-6 px-16-desktop",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color of section",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-medium",
+      "label": "Medium Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "Hide Content On Mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "Hide Content On Desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.rich-text.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Talk about your brand",
+          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Color of text",
+          "default": "#000000"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "default": "h1",
+          "label": "Heading Size"
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "options": [
+            {
+              "value": "font-bold",
+              "label": "Bold"
+            },
+            {
+              "value": "font-semibold",
+              "label": "Semibold"
+            },
+            {
+              "value": "font-normal",
+              "label": "Normal"
+            }
+          ],
+          "default": "font-bold",
+          "label": "Bold"
+        },
+        {
+          "type": "select",
+          "id": "mobile_alignment",
+          "label": "Mobile Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Mobile Alignment"
+        },
+        {
+          "type": "select",
+          "id": "desktop_alignment",
+          "label": "Desktop Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Desktop Alignment"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.rich-text.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+          "label": "t:sections.rich-text.blocks.text.settings.text.label"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Color of text",
+          "default": "#000000"
+        },
+        {
+          "type": "select",
+          "id": "mobile_alignment",
+          "label": "Mobile Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Mobile Alignment"
+        },
+        {
+          "type": "select",
+          "id": "desktop_alignment",
+          "label": "Desktop Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Desktop Alignment"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.rich-text.blocks.button.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "t:sections.rich-text.blocks.button.settings.button_label.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.rich-text.blocks.button.settings.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "options": [
+            {
+              "value": "button-primary",
+              "label": "Button Primary"
+            },
+            {
+              "value": "button-secondary",
+              "label": "Button Secondary"
+            },
+            {
+              "value": "button-white",
+              "label": "Button White"
+            },
+            {
+              "value": "button-small",
+              "label": "Button Small"
+            },
+            {
+              "value": "button-link",
+              "label": "Button Link"
+            }
+          ],
+          "default": "button-white",
+          "label": "Button Style"
+        },
+        {
+          "type": "select",
+          "id": "mobile_alignment",
+          "label": "Mobile Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Mobile Alignment"
+        },
+        {
+          "type": "select",
+          "id": "desktop_alignment",
+          "label": "Desktop Alignment",
+          "options": [
+            {
+              "value": "text-center",
+              "label": "Text Center"
+            },
+            {
+              "value": "text-right",
+              "label": "Text Right"
+            },
+            {
+              "value": "text-left",
+              "label": "Text Left"
+            }
+          ],
+          "default": "text-left",
+          "label": "Desktop Alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.presets.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

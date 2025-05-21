@@ -1,0 +1,124 @@
+<style>
+  #shopify-section-{{section.id}} {
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px
+  }
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+
+    padding-top:{{section.settings.mobile_padding_top}}px;
+    padding-bottom: {{section.settings.mobile_padding_bottom}}px
+  }
+  }
+</style>
+
+<div
+  class='{{ section.settings.desktop_max_width }} mx-auto'
+>
+  {% comment %}
+    ------------------------------------------------------------------------------
+      Desktop Image
+    ------------------------------------------------------------------------------
+  {% endcomment %}
+  {%
+    render 'responsive-image' with
+    image: section.settings.image,
+    image_class: 'hidden md:block w-full',
+    image_width: '1500x'
+  %}
+
+  {% comment %}
+    ------------------------------------------------------------------------------
+      Mobile Image
+    ------------------------------------------------------------------------------
+  {% endcomment %}
+  {%
+    render 'responsive-image' with
+    image: section.settings.mobile_image,
+    image_class: 'block md:hidden w-full',
+    image_width: '750x'
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Featured Image",
+  "tag": "section",
+  "class": "px-6 px-16-desktop bg-black",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-medium",
+      "label": "Medium Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Image"
+    }
+  ]
+}
+{% endschema %}
+`

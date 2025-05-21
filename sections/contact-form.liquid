@@ -1,0 +1,276 @@
+<style>
+  #shopify-section-{{section.id}} {
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px
+  }
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+
+    padding-top:{{section.settings.mobile_padding_top}}px;
+    padding-bottom: {{section.settings.mobile_padding_bottom}}px
+  }
+  }
+</style>
+
+<div class='{{ section.settings.desktop_max_width }} mx-auto'>
+  <h2 class='sr-only'>Contact us</h2>
+
+  <div class='flex flex-col justify-center'>
+    <!-- Contact form -->
+    <div>
+      {% if section.settings.heading != blank %}
+        <h2 class='mb-6 {{ section.settings.heading_size }} {{section.settings.font_weight}}  text-dark'>
+          {{ section.settings.heading | replace: '&lt;', '<' | replace: '&gt;', '>' }}
+        </h2>
+      {% endif %}
+
+      {%- form 'contact', id: 'ContactForm' -%}
+        {%- if form.posted_successfully? -%}
+          <div class='form-status form-status-list form__message flex' tabindex='-1' autofocus>
+            {% render 'icon-success' %}
+            {{ 'templates.contact.form.post_success' | t }}
+          </div>
+        {%- elsif form.errors -%}
+          <div class='form__message'>
+            <h2 class='form-status caption-large text-body' role='alert' tabindex='-1' autofocus>
+              {% render 'icon-error' %}
+              {{ 'templates.contact.form.error_heading' | t }}
+            </h2>
+          </div>
+          <ul class='form-status-list caption-large' role='list'>
+            <li>
+              <a href='#ContactForm-email' class='link'>
+                {{ form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email }}
+              </a>
+            </li>
+          </ul>
+        {%- endif -%}
+        <div class='mt-6 flex flex-col'>
+          <div>
+            <label for='contact[full-name]' class='text-sm font-medium text-gray-900 hidden'>Your full name</label>
+            <div class='mt-1'>
+              <input
+                type='text'
+                name='contact[full-name]'
+                id='full-name'
+                autocomplete='given-name'
+                placeholder='Your full name'
+                class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                required
+              >
+            </div>
+          </div>
+
+          <div>
+            <label for='contact[email]' class='text-sm font-medium text-gray-900 hidden'>Email</label>
+            {%- if form.errors contains 'email' -%}
+              <small class='contact__field-error' id='ContactForm-email-error'>
+                <span class='visually-hidden'>{{ 'accessibility.error' | t }}</span>
+                <span class='form__message'>
+                  {%- render 'icon-error' -%}
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </span>
+              </small>
+            {%- endif -%}
+            <div class='mt-1'>
+              <input
+                id='email'
+                name='contact[email]'
+                type='email'
+                autocomplete='email'
+                required
+                class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                {% if form.errors contains 'email' %}
+                  aria-invalid='true'
+                  aria-describedby='ContactForm-email-error'
+                {% endif %}
+                placeholder='Your email address'
+              >
+            </div>
+          </div>
+          <div>
+            <label for='contact[phone]' class='text-sm font-medium text-gray-900 hidden'>Phone</label>
+            <div class='mt-1'>
+              <input
+                type='tel'
+                name='contact[phone]'
+                id='phone'
+                autocomplete='tel'
+                placeholder='Phone'
+                class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+              >
+            </div>
+            <div class='sm:col-span-2'>
+              <label for='contact[subject]' class='text-sm font-medium text-gray-900 hidden'>Subject</label>
+              <div class='mt-1'>
+                <input
+                  type='text'
+                  name='contact[subject]'
+                  id='subject'
+                  placeholder='Subject'
+                  required
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                >
+              </div>
+            </div>
+            <div class='sm:col-span-2'>
+              <div class='flex justify-between'>
+                <label for='contact[body]' class='text-sm font-medium text-gray-900 hidden'>Message</label>
+                <span id='message-max' class='hidden bg-white w-full p-3 text-dark border-solid border border-dark mb-2'
+                  >Max. 500 characters</span
+                >
+              </div>
+              <div class='mt-1'>
+                <textarea
+                  id='message'
+                  name='contact[body]'
+                  placeholder='Message'
+                  rows='4'
+                  required
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                  aria-describedby='message-max'
+                ></textarea>
+              </div>
+            </div>
+            <div class='sm:col-span-2 sm:flex sm:justify-start'>
+              <button
+                type='submit'
+                class='button-primary w-full md:w-fit'
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.contact-form.name",
+  "tag": "section",
+  "class": "px-6 px-16-desktop bg-white",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-medium",
+      "label": "Medium Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    },
+    {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Contact Us",
+      "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading Size"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "options": [
+        {
+          "value": "font-bold",
+          "label": "Bold"
+        },
+        {
+          "value": "font-semibold",
+          "label": "Semibold"
+        },
+        {
+          "value": "font-normal",
+          "label": "Normal"
+        }
+      ],
+      "default": "font-bold",
+      "label": "Bold"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact-form.presets.name"
+    }
+  ]
+}
+{% endschema %}

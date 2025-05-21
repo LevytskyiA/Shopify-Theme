@@ -1,0 +1,35 @@
+{% comment %}
+    Renders cart notification
+
+    Accepts:
+    - color_scheme: {String} sets the color scheme of the notification (optional)
+
+    Usage:
+    {% render 'cart-notification' %}
+{% endcomment %}
+
+<cart-notification>
+  <div class="cart-notification-wrapper page-width{% if color_scheme %} color-{{ color_scheme }}{% endif %}">
+    <div id="cart-notification" class="cart-notification focus-inset inset-x-0 mt-px pb-6 bg-white shadow-lg sm:px-2 lg:top-full lg:left-auto lg:right-0 lg:mt-3 lg:-mr-1.5 lg:w-80 lg:rounded-lg lg:ring-1 lg:ring-black lg:ring-opacity-5" aria-modal="true" aria-label="{{ 'general.cart.item_added' | t }}" role="dialog" tabindex="-1">
+      <div class="cart-notification__header">
+        <h2 class="cart-notification__heading caption-large text-xl">{%- render 'icon-checkmark' -%} {{ 'general.cart.item_added' | t }}</h2>
+        <button type="button" class="cart-notification__close modal__close-button link link--text focus-inset" aria-label="{{ 'accessibility.close' | t }}">
+          <svg class="icon icon-close" aria-hidden="true" focusable="false"><use href="#icon-close"></svg>
+        </button>
+      </div>
+      <div id="cart-notification-product" class="cart-notification-product"></div>
+      <div class="mt-2 cart-notification__links text-center">
+        <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+          <button class="w-full bg-lightPrimaryBlue border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500" name="checkout">Place Order Request</button>
+        </form>
+        <a href="{{ routes.cart_url }}" id="cart-notification-button" class="text-sm mt-2 font-medium text-lightPrimaryBlue hover:text-indigo-500"></a>
+      </div>
+    </div>
+  </div>
+</cart-notification>
+{% style %}
+  .cart-notification {
+     display: none;
+  }
+{% endstyle %}
+

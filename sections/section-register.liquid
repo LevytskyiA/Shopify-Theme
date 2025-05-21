@@ -1,0 +1,150 @@
+<div class='flex bg-white pt-16 pb-16'>
+  <div class='flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24'>
+    <div class='mx-auto w-full max-w-sm lg:w-96'>
+      <div>
+        <h2 class='mt-6 text-3xl font-extrabold text-dark'>CREATE ACCOUNT</h2>
+        <p class='mt-2 text-sm text-dark'>
+          Or
+          <a href='/account/login' class='font-medium text-dark'> SIGN IN </a>
+        </p>
+      </div>
+
+      <div class='mt-8'>
+        <div>
+          {%- form 'create_customer', novalidate: 'novalidate' -%}
+            <div>
+              {%- if form.errors -%}
+                <h2 class='text-error font-bold text-lg' tabindex='-1' autofocus>
+                  {{ 'templates.contact.form.error_heading' | t }}
+                </h2>
+                <ul>
+                  {%- for field in form.errors -%}
+                    <li class='text-dark'>
+                      {%- if field == 'form' -%}
+                        {{ form.errors.messages[field] }}
+                      {%- else -%}
+                        <a href='#RegisterForm-{{ field }}' class='text-dark'>
+                          {{ form.errors.translated_fields[field] | capitalize }}
+                          {{ form.errors.messages[field] }}
+                        </a>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+              <div class='flex flex-col md:flex-row'>
+                <div class='block w-full mr-4'>
+                  <label for='RegisterForm-FirstName' class='hidden text-sm font-medium text-dark'>
+                    {{ 'customer.register.first_name' | t }}
+                  </label>
+                  <input
+                    type='text'
+                    name='customer[first_name]'
+                    id='RegisterForm-FirstName'
+                    class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light mb-4'
+                    {% if form.first_name %}
+                      value='{{ form.first_name }}'
+                    {% endif %}
+                    autocomplete='given-name'
+                    placeholder='{{ 'customer.register.first_name' | t }}'
+                  >
+                </div>
+
+                <div class='block w-full'>
+                  <label for='RegisterForm-LastName' class='hidden text-sm font-medium text-dark'>
+                    {{ 'customer.register.last_name' | t }}
+                  </label>
+                  <input
+                    type='text'
+                    name='customer[last_name]'
+                    id='RegisterForm-LastName'
+                    {% if form.last_name %}
+                      value='{{ form.last_name }}'
+                    {% endif %}
+                    autocomplete='family-name'
+                    placeholder='{{ 'customer.register.last_name' | t }}'
+                    class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light mb-4'
+                  >
+                </div>
+              </div>
+              <div>
+                <label for='RegisterForm-email' class='hidden  text-sm font-medium text-dark'>
+                  {{ 'customer.register.email' | t }}
+                </label>
+                <input
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                  type='email'
+                  name='customer[email]'
+                  id='RegisterForm-email'
+                  {% if form.email %}
+                    value='{{ form.email }}'
+                  {% endif %}
+                  spellcheck='false'
+                  autocapitalize='off'
+                  autocomplete='email'
+                  aria-required='true'
+                  {% if form.errors contains 'email' %}
+                    aria-invalid='true'
+                    aria-describedby='RegisterForm-email-error'
+                  {% endif %}
+                  placeholder='{{ 'customer.register.email' | t }}'
+                >
+              </div>
+              {%- if form.errors contains 'email' -%}
+                <span id='RegisterForm-email-error' class='text-error font-bold text-lg'>
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}.
+                </span>
+              {%- endif -%}
+              <div>
+                <label for='RegisterForm-password' class='hidden text-sm font-medium text-dark'>
+                  {{ 'customer.register.password' | t }}
+                </label>
+                <input
+                  class='bg-white placeholder-light w-full p-6 text-dark placeholder-current text-base border-solid border border-light md:mr-6 mb-4'
+                  type='password'
+                  name='customer[password]'
+                  id='RegisterForm-password'
+                  aria-required='true'
+                  {% if form.errors contains 'password' %}
+                    aria-invalid='true'
+                    aria-describedby='RegisterForm-password-error'
+                  {% endif %}
+                  placeholder='{{ 'customer.register.password' | t }}'
+                >
+              </div>
+              {%- if form.errors contains 'password' -%}
+                <span id='RegisterForm-password-error' class='text-error font-bold text-lg'>
+                  {{ form.errors.translated_fields.password | capitalize }}
+                  {{ form.errors.messages.password }}.
+                </span>
+              {%- endif -%}
+
+              <div>
+                <button
+                  type='submit'
+                  class='button-white !bg-gold !px-6 !border-gold !text-white w-full font-bold hover:!bg-black hover:!border-black tracking-[1px]  flex justify-center py-2'
+                >
+                  CREATE
+                </button>
+              </div>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Register",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
+}
+{% endschema %}

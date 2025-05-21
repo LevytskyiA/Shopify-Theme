@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "collection-template-facets": {
+      "type": "collection-template-facets"
+    }
+  },
+  "order": ["collection-template-facets"]
+}

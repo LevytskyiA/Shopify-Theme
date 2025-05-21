@@ -1,0 +1,7 @@
+snapshots:
+  - name: Home Page
+    url: https://quickstart-5f3da1d7.myshopify.com/?_ab=0&_fd=0&_sc=1&preview_theme_id=140186812637
+    percy-css: |
+      #preview-bar-iframe { 
+        display: none; 
+      }

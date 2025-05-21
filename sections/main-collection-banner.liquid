@@ -1,0 +1,44 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="relative bg-indigo-800">
+  <div class="absolute inset-0">
+    {% if collection.image != blank %}
+      {% render 'responsive-image' with
+        image: collection.image,
+        image_class: 'w-full h-full object-cover',
+        image_width: '1500x'
+      %}
+    {% endif %}
+    <div class="absolute inset-0 bg-gray-500 mix-blend-multiply" aria-hidden="true"></div>
+  </div>
+  <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+    <!-- <h1 class="text-4xl text-center font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ collection.title }}</h1>
+    <p class="mt-6 text-xl text-indigo-100 max-w-3xl text-center m-auto">{{ collection.description | strip_html }}</p> -->
+  </div>
+</div>
+
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-banner.name",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-collection-banner.settings.paragraph.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "default": false,
+      "label": "t:sections.main-collection-banner.settings.show_collection_image.label",
+      "info": "t:sections.main-collection-banner.settings.show_collection_image.info"
+    }
+  ]
+}
+{% endschema %}

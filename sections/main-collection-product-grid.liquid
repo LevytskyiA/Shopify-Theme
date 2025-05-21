@@ -1,0 +1,599 @@
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign total_active_values = 0
+  if collection.url
+    assign collection_url = collection.url
+  else
+    assign terms = collection.terms | escape
+    assign collection_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+<script src='{{ 'facets.js' | asset_url }}' defer='defer'></script>
+
+<div class='bg-white'>
+  <div>
+    <!--
+      Mobile filter dialog
+
+      Off-canvas filters for mobile, show/hide based on off-canvas filters state.
+    -->
+    <div class='relative z-40 lg:hidden' role='dialog' aria-modal='true'>
+      <!--
+        Off-canvas menu backdrop, show/hide based on off-canvas menu state.
+
+        Entering: "transition-opacity ease-linear duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "transition-opacity ease-linear duration-300"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div id='mobile-filter-overlay' class='fixed inset-0 bg-black bg-opacity-25 hidden'></div>
+
+      <mobile-filters class='mobile-facets__wrapper fixed inset-0 z-40 hidden'>
+        <!--
+          Off-canvas menu, show/hide based on off-canvas menu state.
+
+          Entering: "transition ease-in-out duration-300 transform"
+            From: "translate-x-full"
+            To: "translate-x-0"
+          Leaving: "transition ease-in-out duration-300 transform"
+            From: "translate-x-0"
+            To: "translate-x-full"
+        -->
+        <div class='ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto z-50'>
+          <div class='px-4 flex items-center justify-between'>
+            <h2 class='text-lg font-medium text-gray-900'>Filters</h2>
+            <button
+              type='button'
+              class='-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400'
+            >
+              <span class='sr-only'>Close menu</span>
+              <!-- Heroicon name: outline/x -->
+              <svg
+                id='mobile-filter-close'
+                class='h-6 w-6'
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke-width='2'
+                stroke='currentColor'
+                aria-hidden='true'
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <facet-filters-form>
+            <!-- Filters -->
+            <form id='FacetFiltersFormMobile' class='mt-4 border-t border-gray-200'>
+              <h3 class='sr-only'>Categories</h3>
+              <div class='mobile-facets__inner'>
+                {% if results.current_vendor or results.current_type %}
+                  <input type='hidden' name='q' value='{{ results.current_vendor }}{{ results.current_type }}'>
+                {% endif %}
+
+                {%- if results.terms -%}
+                  <input type='hidden' name='q' value='{{ results.terms | escape }}'>
+                  <input name='options[prefix]' type='hidden' value='last'>
+                {%- endif -%}
+              </div>
+              <div class='font-medium text-gray-900 px-2 py-3'>
+                {%- for filter in collection.filters -%}
+                  {% case filter.type %}
+                    {% when 'list' %}
+                      <details class='mobile-facets__list list-unstyled border-t border-solid border-b-0 border-r-0 border-l-0 border-gray-200 px-4 py-6 space-y-6'>
+                        <summary class='flex items-center justify-between'>
+                          <span class='font-medium text-gray-900'>{{ filter.label | escape }} </span>
+                          {% render 'icon-caret' %}
+                        </summary>
+
+                        {%- for value in filter.values -%}
+                          <div class='flex items-center'>
+                            <input
+                              class='mobile-facets__checkbox h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500'
+                              type='checkbox'
+                              name='{{ value.param_name }}'
+                              value='{{ value.value }}'
+                              id='Filter-{{ filter.label | escape }}-mobile-{{ forloop.index }}'
+                              {% if value.active %}
+                                checked
+                              {% endif %}
+                              {% if value.count == 0 and value.active == false %}
+                                disabled
+                              {% endif %}
+                            >
+                            <label
+                              for='Filter-{{ filter.label | escape }}-mobile-{{ forloop.index }}'
+                              class='ml-3 min-w-0 flex-1 text-gray-500'
+                            >
+                              {{- value.label | escape }} ({{ value.count }})</label
+                            >
+                          </div>
+                        {%- endfor -%}
+                      </details>
+
+                    {% when 'price_range' %}
+                      <details class='mobile-facets__list list-unstyled border-t border-solid border-b-0 border-r-0 border-l-0 border-gray-200 px-4 py-6 space-y-6'>
+                        <summary class='flex items-center justify-between'>
+                          <span class='font-medium text-gray-900'>{{ filter.label | escape }} </span>
+                          {% render 'icon-caret' %}
+                        </summary>
+
+                        <price-range class='facets__price'>
+                          <span class='field-currency'>{{ cart.currency.symbol }}</span>
+
+                          <div class='field'>
+                            <input
+                              class='field__input shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                              name='{{ filter.min_value.param_name }}'
+                              id='Mobile-Filter-{{ filter.label | escape }}-GTE'
+                              {%- if filter.min_value.value -%}
+                                {%- if uses_comma_decimals -%}
+                                  value='{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                {%- else -%}
+                                  value='{{ filter.min_value.value | money_without_currency | replace: ',', '' }}'
+                                {%- endif %}
+                              {%- endif -%}
+                              type='number'
+                              placeholder='0'
+                              min='0'
+                              inputmode='decimal'
+                              {%- if uses_comma_decimals -%}
+                                max='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                              {%- else -%}
+                                max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                              {% endif %}
+                            >
+                            <label
+                              class='field__label block text-sm font-medium text-gray-700'
+                              for='Mobile-Filter-{{ filter.label | escape }}-GTE'
+                            >
+                              {{- 'products.facets.from' | t -}}
+                            </label>
+                          </div>
+
+                          <span class='field-currency'>{{ cart.currency.symbol }}</span>
+                          <div class='field'>
+                            <input
+                              class='field__input shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                              name='{{ filter.max_value.param_name }}'
+                              id='Mobile-Filter-{{ filter.label | escape }}-LTE'
+                              {%- if filter.max_value.value -%}
+                                {%- if uses_comma_decimals -%}
+                                  value='{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                {%- else -%}
+                                  value='{{ filter.max_value.value | money_without_currency | replace: ',', '' }}'
+                                {%- endif %}
+                              {%- endif -%}
+                              type='number'
+                              min='0'
+                              inputmode='decimal'
+                              {%- if uses_comma_decimals -%}
+                                placeholder='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                max='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                              {%- else -%}
+                                placeholder='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                                max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                              {% endif %}
+                            >
+                            <label
+                              class='field__label block text-sm font-medium text-gray-700'
+                              for='Mobile-Filter-{{ filter.label | escape }}-LTE'
+                            >
+                              {{- 'products.facets.to' | t -}}
+                            </label>
+                          </div>
+                        </price-range>
+                      </details>
+                  {% endcase %}
+                {%- endfor -%}
+              </div>
+            </form>
+          </facet-filters-form>
+        </div>
+      </mobile-filters>
+    </div>
+
+    <main class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' id='main-collection-filters' data-id='{{ section.id }}'>
+      <facet-filters-form>
+        <form id='FacetFiltersForm'>
+          <div class='relative flex items-center justify-between pt-4 lg:pt-12 pb-2 border-b-2 tw-border-solid border-gray-200 flex-col md:flex-row'>
+            <h1 class='text-xl md:text-4xl font-extrabold tracking-tight text-gray-900'>{{ collection.title }}</h1>
+
+            <div class='w-full justify-center md:w-auto flex items-center m-auto mr-auto ml-auto md:mr-0'>
+              <div class='relative inline-block text-left facet-filters sorting w-full'>
+                <div class='facet-filters sorting caption'>
+                  <div class='facet-filters__field'>
+                    <div class='select mr-2 '>
+                      {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                      <select
+                        name='sort_by'
+                        class='facet-filters__sort select__select caption-large cursor-pointer mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 border-solid focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
+                        id='SortBy'
+                        aria-describedby='a11y-refresh-page-message'
+                      >
+                        {%- for option in collection.sort_options -%}
+                          <option
+                            class='text-gray-500 block px-4 py-2 text-sm cursor-pointer'
+                            value='{{ option.value | escape }}'
+                            {% if option.value == sort_by %}
+                              selected='selected'
+                            {% endif %}
+                          >
+                            {{ option.name | escape }}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  </div>
+
+                  <noscript>
+                    <button type='submit' class='facets__button-no-js button button--tertiary'>
+                      {{ 'products.facets.sort_button' | t }}
+                    </button>
+                  </noscript>
+                </div>
+              </div>
+
+              <button
+                id='mobile-filter-open'
+                type='button'
+                class='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primaryRed hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lg:hidden'
+              >
+                <span class='sr-only'>Filters</span>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  class='h-6 w-6 mr-2'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                  stroke-width='2'
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <!-- Heroicon name: solid/filter -->
+                Filters
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class='active-facets active-facets-desktop border-gray-200 border-b-1 border-r-0 border-l-0 border-t-0 border-solid py-2'>
+              {%- for filter in collection.filters -%}
+                {%- for value in filter.active_values -%}
+                  <facet-remove>
+                    <a href='{{ value.url_to_remove }}' class='active-facets__button active-facets__button--light'>
+                      <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2'>
+                        {{ value.label | escape }}
+                        {% render 'icon-close-small' %}
+                        <span class='hidden'>{{ 'products.facets.clear_filter' | t }}</span>
+                      </span>
+                    </a>
+                  </facet-remove>
+                {%- endfor -%}
+                {% if filter.type == 'price_range' %}
+                  {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                    <facet-remove>
+                      <a href='{{ filter.url_to_remove }}' class='active-facets__button active-facets__button--light'>
+                        <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2'>
+                          {%- if filter.min_value.value -%}
+                            {{ filter.min_value.value | money }}
+                          {%- else -%}
+                            {{ 0 | money }}
+                          {%- endif -%}
+                          -
+                          {%- if filter.max_value.value -%}
+                            {{ filter.max_value.value | money }}
+                          {%- else -%}
+                            {{ filter.range_max | money }}
+                          {%- endif -%}
+                          {% render 'icon-close-small' %}
+                          <span class='hidden'>{{ 'products.facets.clear_filter' | t }}</span>
+                        </span>
+                      </a>
+                    </facet-remove>
+                  {%- endif -%}
+                {% endif %}
+              {%- endfor -%}
+              <facet-remove class='active-facets__button-wrapper'>
+                <a href='{{ results_url }}' class='active-facets__button-remove underlined-link'>
+                  <span class='text-sm'>{{ 'products.facets.clear_all' | t }}</span>
+                </a>
+              </facet-remove>
+            </div>
+          </div>
+
+          <section aria-labelledby='products-heading' class='pt-0 sm:pt-6 pb-24'>
+            <h2 id='products-heading' class='sr-only'>Products</h2>
+
+            <div class='grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10'>
+              <!-- Filter -->
+              <div class='hidden lg:block facets__form'>
+                {%- for filter in collection.filters -%}
+                  {% case filter.type %}
+                    {% when 'list' %}
+                      <details
+                        id='Details-{{ forloop.index }}-{{ section.id }}'
+                        class='py-3 text-sm font-medium text-gray-900 border-b-1 border-r-0 border-t-0 border-l-0 border-solid border-gray-100 disclosure-has-popup facets__disclosure js-filter'
+                        data-index='{{ forloop.index }}'
+                      >
+                        <summary class='facets__summary caption-large focus-offset'>
+                          <div class='font-medium text-gray-900'>
+                            <span class='text-sm'>{{ filter.label | escape }}</span>
+                            {% render 'icon-caret' %}
+                          </div>
+                        </summary>
+
+                        <div class='space-y-4 mt-4' role='list'>
+                          {%- for value in filter.values -%}
+                            <div class='flex items-center'>
+                              <input
+                                type='checkbox'
+                                name='{{ value.param_name }}'
+                                value='{{ value.value }}'
+                                class='h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer'
+                                id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                                {% if value.active %}
+                                  checked
+                                {% endif %}
+                                {% if value.count == 0 and value.active == false %}
+                                  disabled
+                                {% endif %}
+                              >
+                              <label
+                                for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                                class='cursor-pointer ml-3 text-sm text-gray-600'
+                              >
+                                {{ value.label | escape }} ({{ value.count }})
+                              </label>
+                            </div>
+                          {%- endfor -%}
+                        </div>
+                      </details>
+                    {% when 'price_range' %}
+                      {% liquid
+                        assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                        assign uses_comma_decimals = false
+                        if currencies_using_comma_decimals contains cart.currency.iso_code
+                          assign uses_comma_decimals = true
+                        endif
+                      %}
+                      <details
+                        id='Details-{{ forloop.index }}-{{ section.id }}'
+                        class=' border-b-1 border-r-0 border-t-0 border-l-0 border-solid border-gray-100 py-3 disclosure-has-popup facets__disclosure js-filter'
+                        data-index='{{ forloop.index }}'
+                      >
+                        <summary class='facets__summary caption-large focus-offset text-sm'>
+                          <div>
+                            <span class='font-medium text-sm text-gray-900'>{{ filter.label | escape }}</span>
+                            {% render 'icon-caret' %}
+                          </div>
+                        </summary>
+                        <price-range class='facets__price pt-4'>
+                          <span class='field-currency'>{{ cart.currency.symbol }}</span>
+                          <div class='field'>
+                            <input
+                              class='field__input shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                              name='{{ filter.min_value.param_name }}'
+                              id='Filter-{{ filter.label | escape }}-GTE'
+                              {%- if filter.min_value.value -%}
+                                {%- if uses_comma_decimals -%}
+                                  value='{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                {%- else -%}
+                                  value='{{ filter.min_value.value | money_without_currency | replace: ',', '' }}'
+                                {%- endif %}
+                              {%- endif -%}
+                              type='number'
+                              placeholder='0'
+                              min='0'
+                              {%- if uses_comma_decimals -%}
+                                max='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                              {%- else -%}
+                                max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                              {% endif %}
+                            >
+                            <label
+                              class='field__label block text-sm font-medium text-gray-700'
+                              for='Filter-{{ filter.label | escape }}-GTE'
+                            >
+                              {{- 'products.facets.from' | t -}}
+                            </label>
+                          </div>
+                          <span class='field-currency'>{{ cart.currency.symbol }}</span>
+                          <div class='field'>
+                            <input
+                              class='field__input shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                              name='{{ filter.max_value.param_name }}'
+                              id='Filter-{{ filter.label | escape }}-LTE'
+                              {%- if filter.max_value.value -%}
+                                {%- if uses_comma_decimals -%}
+                                  value='{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                {%- else -%}
+                                  value='{{ filter.max_value.value | money_without_currency | replace: ',', '' }}'
+                                {%- endif %}
+                              {%- endif -%}
+                              type='number'
+                              min='0'
+                              {%- if uses_comma_decimals -%}
+                                placeholder='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                                max='{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}'
+                              {%- else -%}
+                                placeholder='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                                max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                              {% endif %}
+                            >
+                            <label
+                              class='field__label block text-sm font-medium text-gray-700'
+                              for='Filter-{{ filter.label | escape }}-LTE'
+                            >
+                              {{- 'products.facets.to' | t -}}
+                            </label>
+                          </div>
+                        </price-range>
+                      </details>
+                  {% endcase %}
+                {% endfor %}
+              </div>
+              <!-- Product grid -->
+              <div class='lg:col-span-3'>
+                <!-- Replace with your content -->
+                <div class='border-1 border-dashed border-gray-200 rounded-lg h-full'>
+                  <div class='bg-white'>
+                    <div id='ProductGridContainer' class='max-w-7xl mx-auto py-4 px-4'>
+                      <h2 class='sr-only'>Products</h2>
+                      {%- paginate collection.products by section.settings.products_per_page -%}
+                        <div class='loading-overlay gradient'></div>
+
+                        <div
+                          class='grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-2 sm:gap-y-4 lg:grid-cols-3 lg:gap-x-2'
+                          id='product-grid'
+                          data-id='{{ section.id }}'
+                        >
+                          {%- for product in collection.products -%}
+                            <div class='group relative bg-gray-100 border border-gray-200 rounded-lg flex flex-col overflow-hidden p-2'>
+                              <div class='aspect-w-3 aspect-h-2 sm:aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96'>
+                                {%
+                                  render 'responsive-image' with
+                                  image: product.featured_media,
+                                  image_class: 'motion-reduce w-full h-full object-center object-cover sm:w-full sm:h-full',
+                                  image_width: '533x'
+                                %}
+                              </div>
+                              <div class='flex-1 p-4 space-y-2 flex flex-col'>
+                                <h3 class='text-sm font-medium text-gray-900'>
+                                  <a class='font-extrabold' href='{{ product.url | default: '#' }}'>
+                                    <span aria-hidden='true' class='absolute inset-0'></span>
+                                    {{ product.title }}
+                                  </a>
+                                </h3>
+                                <p class='text-sm text-gray-500'>
+                                  {{ product.description | strip_html | truncate: 150 }}
+                                </p>
+                                <div class='flex-1 flex flex-col justify-end'>
+                                  <p class='text-base font-medium text-gray-900'>{{ product.price | money }}</p>
+                                </div>
+                                <button
+                                  type='button'
+                                  class='text-center items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primaryRed hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                                >
+                                  Add to Cart
+                                </button>
+                              </div>
+                            </div>
+                          {% endfor %}
+                          <!-- More products... -->
+                        </div>
+
+                        {%- if paginate.pages > 1 -%}
+                          {% render 'pagination', paginate: paginate, anchor: '' %}
+                        {%- endif -%}
+                      {% endpaginate %}
+                    </div>
+                  </div>
+                </div>
+                <!-- /End replace -->
+              </div>
+            </div>
+          </section>
+        </form>
+      </facet-filters-form>
+    </main>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-product-grid.name",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 16,
+      "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.add_image_padding.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_outline",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.show_image_outline.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
+      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label",
+      "info": "t:sections.main-collection-product-grid.settings.enable_filtering.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_on_larger_devices",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.collapse_on_larger_devices.label"
+    }
+  ]
+}
+{% endschema %}

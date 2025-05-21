@@ -1,0 +1,32 @@
+<div class='select mr-2 '>
+  {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+  <select
+    name='sort_by'
+    class='select__select bg-white text-dark font-bold text-base w-full p-3 pr-5 border-solid border border-dark mb-2 cursor-pointer'
+    id='SortBy'
+    tabindex='0'
+    aria-describedby='a11y-refresh-page-message'
+  >
+    <option class='hidden' disabled value='' selected='selected'>SORT BY</option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='null'>FEATURED</option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='BEST_SELLING'>
+      BEST SELLING
+    </option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='TITLE'>
+      ALPHABETICALLY, A-Z
+    </option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='TITLE, reverse:true'>
+      ALPHABETICALLY, Z-A
+    </option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='PRICE'>
+      PRICE, LOW TO HIGH
+    </option>
+    <option class='text-dark block font-bold px-2 py-2 text-base cursor-pointer' value='PRICE, reverse:true'>
+      PRICE, HIGH TO LOW
+    </option>
+    {% comment %}
+      <option class='text-white block px-2 py-2 text-base cursor-pointer' value='UPDATED_AT, reverse:true'>Date, old to new</option>
+      <option class='text-white block px-2 py-2 text-base cursor-pointer' value='UPDATED_AT'>Date, new to old</option>
+    {% endcomment %}
+  </select>
+</div>

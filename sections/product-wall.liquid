@@ -1,0 +1,358 @@
+<div
+  style="--backgroundColor: {{ section.settings.bg_color }}"
+  class="
+    row relative before:content-['']
+    before:absolute before:inset-x-0 before:bottom-0 before:h-1/2
+    before:bg-[--backgroundColor] before:z-[-1]
+  "
+>
+  {% if section.blocks.size > 1 %}
+    <div
+      class="xl:container pt-[30px] pb-[60px]"
+      x-data='{
+      products: [
+        {% for block in section.blocks %}
+          {% assign product = all_products[block.settings.product] %}
+          {% if product %}
+            {
+              id: "{{ product.id | escape }}",
+              labelColour: "{{ block.settings.label_colour | escape }}",
+              label: "{{ block.settings.product_label | escape }}",
+              title: "{{ product.title | escape }}",
+              handle: "{{ product.handle }}",
+              {% if product.compare_at_price_max > product.price %}
+                compareAtPrice: "{{ product.compare_at_price_max | money }}",
+              {% endif %}
+              price: "{{ product.price | money }}",
+              url: "{{ product.url }}",
+              urlLabel: "{{ 'products.product.view_more' | t | escape }}",
+              {% if block.settings.image != blank %}
+                image: "{{ block.settings.image | image_url: width: 312, height: 252 }}",
+              {% else %}
+                image: "{{ product.featured_image | image_url: width: 312, height: 252 }}",
+              {% endif %}
+              description: {{ product.description | json }},
+              productGroup: "{{ block.settings.product_group | join }}",
+              {% if product.first_available_variant %}
+                firstAvailableVariantId: {{ product.first_available_variant.id }},
+              {% endif %}
+              variants: [
+                {% for variant in product.variants %}
+                  {
+                    id: {{ variant.id }},
+                    title: "{{ variant.title | escape }}",
+                    price: "{{ variant.price | money }}",
+                    available: {{ variant.available | json }}
+                  }{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              ]
+            }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+        {% endfor %}
+      ],
+      section: {
+        backGroundColour: "{{ section.settings.bg_color | escape }}",
+        subheading: "{{ section.settings.subheading | escape }}",
+        buttonLabel: "{{ section.settings.button_label | escape }}",
+        buttonUrl: "{{ section.settings.button_link | escape }}"
+      },
+      groups: [],
+      activeGroup: null,
+      init() {
+        this.groups = [...new Set(this.products.map(p => p.productGroup).filter(Boolean))];
+        this.activeGroup = this.groups[0];
+      }
+    }'
+      x-init="init()"
+    >
+      <div class="row px-[30px] mb-[60px] xl:px-0">
+        <div class="flex gap-3 justify-center border-b-2 border-solid border-grey">
+          <template
+            x-for="group in groups"
+            :key="group"
+          >
+            <button
+              type="button"
+              class="
+                bg-white pt-[20px] pb-[12px] lg:max-w-[236px] w-full flex flex-col
+                items-center before:content-[''] before:absolute before:bottom-[-1px] before:h-[5px]
+                before:w-full relative
+              "
+              :class="group === activeGroup ? 'text-darkBlue before:bg-darkBlue' : 'text-greyhound before:bg-transparent'"
+              @click="activeGroup = group"
+            >
+              <template x-if="group.toLowerCase() === 'cat'">
+                {% render 'icon-cat' %}
+              </template>
+              <template x-if="group.toLowerCase() === 'dog'">
+                {% render 'icon-dog' %}
+              </template>
+              <span x-text="group" class="tex-md font-medium"></span>
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <div
+        x-data="flickitySlider"
+        x-init="init()"
+        x-effect="watchActiveGroup(activeGroup)"
+      >
+        <div
+          class="
+            carousel lg:justify-center xl:flex lg:flex-wrap gap-[64px] mb-[32px]
+            lg:ml-0 nth-1:ml-[30px]
+          "
+          js-product-wall="slider"
+          x-ref="flickityContainer"
+        >
+          <template
+            x-for="product in products.filter(p => p.productGroup === activeGroup)"
+            :key="product.handle"
+          >
+            <div
+              x-data="
+              {
+                product: product,
+                selectedVariant: product.variants[0] || null
+              }
+            "
+              x-transition.opacity.duration.500ms
+              class="
+                carousel-cell animate-fade-in transition-opacity duration-500 ease-in-out w-full
+                md:w-1/2 rounded-[20px] py-[40px] px-[25px] bg-white
+                shadow-[0px_2px_8px_0px_rgba(16,16,17,0.06)] ml-[30px] mr-[34px] xl:ml-0 xl:mr-[0] relative
+                min-h-full max-w-[362px] min-w-[362px]
+              "
+            >
+              <template  x-if="product.label">
+              <span
+                x-text="product.label"
+                :style="`background-color: ${product.labelColour}`"
+                class="
+                  text-white py-[2px] px-[16px] text-xs font-medium tracking-[0.25px]
+                  rounded-tl-full rounded-br-full inline-block absolute top-0 left-0
+                "
+              >
+              </span>
+              </template>
+              <h3 x-text="product.title" class="text-md font-medium text-wetNose mb-[16px] xl:mb-[20px]"></h3>
+              <img :src="product.image" alt="product.title" class="mb-[16px] xl:mb-[20px]" />
+
+              <template x-if="product.variants.length > 1">
+                <select
+                  class="border-1 border-solid border-wolf w-full px-[12px] py-[14px] bg-bone mb-[16px] xl:mb-[20px]"
+                  @change="selectedVariant = product.variants.find(v => v.id == parseInt($event.target.value))"
+                >
+                  <template x-for="variant in product.variants" :key="variant.id">
+                    <option :value="variant.id" x-text="variant.title"></option>
+                  </template>
+                </select>
+              </template>
+
+              <p class="mb-[16px] flex gap-[4px] xl:mb-[20px]">
+                <template x-if="product.compareAtPrice">
+                  <span
+                    class="text-md font-normal text-weimaraner"
+                    x-text="product.compareAtPrice"
+                  >
+                  </span>
+                </template>
+
+                <span
+                  x-text="selectedVariant ? selectedVariant.price : product.price"
+                  class="text-md font-normal text-wetNose"
+                >
+                </span>
+              </p>
+
+              <quantity-input class="hidden">
+                <input
+                  js-buy-button="quantity"
+                  class="quantity__input border-0 w-20"
+                  type="number"
+                  name="quantity"
+                  min="1"
+                  value="1"
+                >
+              </quantity-input>
+
+              <template x-if="product.variants.length > 1">
+                <input
+                  js-buy-button="variant"
+                  type="hidden"
+                  name="variant_id"
+                  :value="selectedVariant ? selectedVariant.id : product.firstAvailableVariantId"
+                />
+              </template>
+
+              <buy-button
+                class="flex mb-[16px] xl:mb-[20px]"
+                :id="selectedVariant ? selectedVariant.id : (product.firstAvailableVariantId ? product.firstAvailableVariantId : product.id)"
+              >
+                <button
+                  class="
+                    max-w-[171px] w-full rounded-[20px] button bg-blueClue py-[8px] px-[20px]
+                    items-center text-white text-xs font-medium tracking-[0.25px]
+                  "
+                >
+                  {{ 'products.product.add_to_cart' | t }}
+                </button>
+              </buy-button>
+              <template x-if="product.description">
+                <div x-html="product.description" class="description-list"></div>
+              </template>
+
+              <template x-if="product.description">
+                <ul class="description-list">
+                  <li>
+                    <a
+                      :href="product.url"
+                      x-text="product.urlLabel"
+                      class="text-blueClue"
+                    >
+                    </a>
+                  </li>
+                </ul>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+
+
+      <template x-if="section.subheading || section.buttonUrl">
+        <div class="px-[30px] text-center">
+          <p x-text="section.subheading" class="text-md font-normal text-wetNose mb-[8px]"></p>
+
+          <a
+            :href="section.buttonUrl"
+            class="
+              justify-center flex py-[8px] px-[12px] gap-[4px] items-center font-medium
+              text-xs tracking-[0.25px] text-blueClue
+            "
+          >
+            <span x-text="section.buttonLabel"></span>
+            {% render 'icon-arrow' %}
+          </a>
+        </div>
+      </template>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("flickitySlider", () => ({
+      flickityInstance: null,
+      init() {
+        this.$watch("activeGroup", (value) => {
+          this.$nextTick(() => this.reinitFlickity());
+        });
+      },
+      reinitFlickity() {
+        if (this.flickityInstance) {
+          this.flickityInstance.destroy();
+          this.flickityInstance = null;
+        }
+
+        if (window.innerWidth < 1440 && !this.$refs.flickityContainer.classList.contains('flickity-enabled')) {
+          this.flickityInstance = new Flickity(this.$refs.flickityContainer, {
+            contain: true,
+            prevNextButtons: false,
+            pageDots: false,
+          });
+        }
+      },
+      watchActiveGroup(val) {
+        this.$nextTick(() => this.reinitFlickity());
+      },
+    }));
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product wall",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#DEF4FA"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "default": "Not sure which is the best fit?",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Compare Dog DNA Tests"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "name": "Product Card",
+      "type": "product-card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "product_label",
+          "label": "Product Label",
+          "default": "Most popular"
+        },
+        {
+          "type": "color",
+          "id": "label_colour",
+          "label": "Product Label Colour",
+          "default": "#CA4F27"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product Image",
+          "info": "Uploaded product image will replace featured product image."
+        },
+        {
+          "type": "text",
+          "id": "product_group",
+          "label": "Product Group"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product wall",
+      "category": "Image with text",
+      "blocks": [
+        {
+          "type": "product-card"
+        },
+        {
+          "type": "product-card"
+        },
+        {
+          "type": "product-card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

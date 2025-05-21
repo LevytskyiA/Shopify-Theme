@@ -1,0 +1,7 @@
+styles/*
+scripts/*
+src/*
+node_modules/*
+package.json
+*.lock
+*.config.js 

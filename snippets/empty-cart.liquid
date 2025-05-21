@@ -1,0 +1,15 @@
+<div class='mt-5'>
+  <div class='px-6 md:px-8'>
+    <h2 class='mb-8 font-workSans text-[21px]'>
+      {{ section.settings.empty_title }}
+    </h2>
+  </div>
+</div>
+{% if section.settings.empty_img != blank %}
+  {%
+    render 'responsive-image' with
+    image: section.settings.empty_img,
+    image_class: 'w-full'
+    image_width: '750x'
+  %}
+{% endif %}

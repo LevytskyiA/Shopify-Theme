@@ -1,0 +1,393 @@
+{
+  "sections": {
+    "2544abad-2179-48d9-9e32-58c45de8bca3": {
+      "type": "image-hero",
+      "blocks": {
+        "af220d61-1823-4318-8be5-26f964f64bce": {
+          "type": "heading",
+          "settings": {
+            "heading": "Talk about your brand.",
+            "text_color": "#000000",
+            "heading_size": "h1",
+            "font_weight": "font-bold"
+          }
+        },
+        "c987d8c7-4962-4d70-8001-27fce1cd90e0": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>",
+            "text_color": "#000000"
+          }
+        },
+        "7bc7d8d1-b09b-41be-965b-b2b29b4cbfe8": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style": "button-white",
+            "button_label_two": "Button label",
+            "button_link_two": "",
+            "button_style_two": "button-white"
+          }
+        }
+      },
+      "block_order": [
+        "af220d61-1823-4318-8be5-26f964f64bce",
+        "c987d8c7-4962-4d70-8001-27fce1cd90e0",
+        "7bc7d8d1-b09b-41be-965b-b2b29b4cbfe8"
+      ],
+      "settings": {
+        "dark_overlay": false,
+        "opacity": 0,
+        "desktop_max_width": "max-w-full",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0,
+        "desktop_image_height": 628,
+        "enable_lazy_loading": false
+      }
+    },
+    "global_styles_yVGEBz": {
+      "type": "global-styles",
+      "settings": {
+      }
+    },
+    "a3f572df-f9d3-49a5-8f57-45956cc55b25": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16620069322973__a3f572df-f9d3-49a5-8f57-45956cc55b25-1674745221b60cd9fd-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "Our Mission",
+            "text_color": "#cca856",
+            "heading_size": "h1",
+            "font_weight": "font-bold",
+            "mobile_alignment": "text-center",
+            "desktop_alignment": "text-center"
+          }
+        },
+        "template--16620069322973__a3f572df-f9d3-49a5-8f57-45956cc55b25-1674745221b60cd9fd-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>",
+            "text_color": "#ffffff",
+            "mobile_alignment": "text-center",
+            "desktop_alignment": "text-center"
+          }
+        }
+      },
+      "block_order": [
+        "template--16620069322973__a3f572df-f9d3-49a5-8f57-45956cc55b25-1674745221b60cd9fd-0",
+        "template--16620069322973__a3f572df-f9d3-49a5-8f57-45956cc55b25-1674745221b60cd9fd-1"
+      ],
+      "settings": {
+        "background_color": "#111111",
+        "desktop_max_width": "max-w-medium",
+        "desktop_padding_top": 96,
+        "desktop_padding_bottom": 96,
+        "mobile_padding_top": 64,
+        "mobile_padding_bottom": 64,
+        "hide_mobile": false,
+        "hide_desktop": false
+      }
+    },
+    "266bd9b6-59b1-46a6-be39-6fb43a96b94d": {
+      "type": "featured-cards",
+      "blocks": {
+        "0009404e-3c51-4e94-a480-bdb531ca581b": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "Optimization",
+            "text_color": "#121212",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h3",
+            "description": "We provide actionable recommendations to improve your tech stack and incorporate best practice strategies and optimizations",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "6b03f627-1482-4da2-9974-9d24d672633c": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "Marketing",
+            "text_color": "#121212",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h3",
+            "description": "We bring expertise to grow your bottom line, while enhancing loyalty and brand affinity in an ever-evolving digital landscape.",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "78405e99-2acf-49c3-a6b2-b463e1acbf17": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "Redesign",
+            "text_color": "#121212",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h3",
+            "description": "UX\/UI design, development, and strategy for eCommerce brands looking to take their on-site customer experience to the next level.",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        }
+      },
+      "block_order": [
+        "0009404e-3c51-4e94-a480-bdb531ca581b",
+        "6b03f627-1482-4da2-9974-9d24d672633c",
+        "78405e99-2acf-49c3-a6b2-b463e1acbf17"
+      ],
+      "settings": {
+        "background_color": "#ffffff",
+        "desktop_max_width": "max-w-full",
+        "desktop_padding_top": 32,
+        "desktop_padding_bottom": 64,
+        "mobile_padding_top": 32,
+        "mobile_padding_bottom": 24,
+        "mobile_padding_x": 24,
+        "mobile_card_padding_x": 0,
+        "border_radius": 0,
+        "extra_wide_desktop_grid_columns": 3,
+        "desktop_grid_columns": 3,
+        "mobile_grid_columns": 1,
+        "desktop_row_gap": 40,
+        "mobile_row_gap": 40,
+        "desktop_column_gap": 16,
+        "mobile_column_gap": 16
+      }
+    },
+    "d35650bb-0b06-4789-9f8e-e2d01c1c9ea7": {
+      "type": "featured-cards",
+      "blocks": {
+        "609ac762-a270-4b86-bb36-9ea1e87531b3": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "51730c43-60a1-4440-8659-15b1868d64f9": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "1e4f3ef0-24c9-415f-9d27-76ddb98176fc": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "6f77ddfe-ac28-4972-ab9f-bcb585f083b9": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "681bae19-2709-4b76-87dd-bd39da2e8c73": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        },
+        "07c74dcd-bbd5-4672-9074-efa7547d7b7a": {
+          "type": "featured-item",
+          "settings": {
+            "background_color": "#ffffff",
+            "desktop_image_max_width": 0,
+            "mobile_image_max_width": 0,
+            "heading": "",
+            "text_color": "#000000",
+            "heading_alignment": "text-left",
+            "font_weight": "font-bold",
+            "heading_size": "h1",
+            "description": "",
+            "description_alignment": "text-left",
+            "url": "",
+            "display_button": false,
+            "button_label": "Button label",
+            "button_style": "button-white",
+            "mobile_alignment": "text-left",
+            "desktop_alignment": "text-left",
+            "external_url": false
+          }
+        }
+      },
+      "block_order": [
+        "609ac762-a270-4b86-bb36-9ea1e87531b3",
+        "51730c43-60a1-4440-8659-15b1868d64f9",
+        "1e4f3ef0-24c9-415f-9d27-76ddb98176fc",
+        "6f77ddfe-ac28-4972-ab9f-bcb585f083b9",
+        "681bae19-2709-4b76-87dd-bd39da2e8c73",
+        "07c74dcd-bbd5-4672-9074-efa7547d7b7a"
+      ],
+      "settings": {
+        "background_color": "#ffffff",
+        "desktop_max_width": "max-w-full",
+        "desktop_padding_top": 32,
+        "desktop_padding_bottom": 32,
+        "mobile_padding_top": 32,
+        "mobile_padding_bottom": 24,
+        "mobile_padding_x": 24,
+        "mobile_card_padding_x": 0,
+        "border_radius": 0,
+        "extra_wide_desktop_grid_columns": 6,
+        "desktop_grid_columns": 6,
+        "mobile_grid_columns": 3,
+        "desktop_row_gap": 40,
+        "mobile_row_gap": 40,
+        "desktop_column_gap": 80,
+        "mobile_column_gap": 40
+      }
+    },
+    "af63141a-2a71-4ba3-9064-0135d461d3f5": {
+      "type": "featured-collection",
+      "blocks": {
+        "37e87d1c-6df3-402a-82f3-a45aa41d390c": {
+          "type": "heading",
+          "settings": {
+            "heading": "Featured Collection",
+            "heading_size": "h3",
+            "font_weight": "font-bold",
+            "mobile_alignment": "text-center",
+            "desktop_alignment": "text-center"
+          }
+        },
+        "6c8e11e2-a8e0-4da9-a3c5-c327559edf61": {
+          "type": "collection",
+          "settings": {
+            "collection": "flowers"
+          }
+        }
+      },
+      "block_order": [
+        "37e87d1c-6df3-402a-82f3-a45aa41d390c",
+        "6c8e11e2-a8e0-4da9-a3c5-c327559edf61"
+      ],
+      "settings": {
+        "desktop_max_width": "max-w-full",
+        "desktop_padding_top": 32,
+        "desktop_padding_bottom": 32,
+        "mobile_padding_top": 32,
+        "mobile_padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "2544abad-2179-48d9-9e32-58c45de8bca3",
+    "global_styles_yVGEBz",
+    "a3f572df-f9d3-49a5-8f57-45956cc55b25",
+    "266bd9b6-59b1-46a6-be39-6fb43a96b94d",
+    "d35650bb-0b06-4789-9f8e-e2d01c1c9ea7",
+    "af63141a-2a71-4ba3-9064-0135d461d3f5"
+  ]
+}

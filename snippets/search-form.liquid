@@ -1,0 +1,163 @@
+<search-form
+  class='fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 hidden'
+  id='headlessui-dialog-27'
+  role='dialog'
+  aria-modal='true'
+>
+  <div class='fixed inset-0 bg-slate-900/25 backdrop-blur transition-opacity opacity-100'></div>
+  <div class='relative w-full max-w-lg transform transition-all opacity-100 scale-100'>
+    <div class='overflow-hidden rounded-lg bg-white shadow-md' id='headlessui-dialog-panel-30'>
+      {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+
+      <predictive-search class='search-modal__form' data-loading-text='{{ 'accessibility.loading' | t }}'>
+        <form action='{{ routes.search_url }}' method='get' role='search' class='search search-modal__form'>
+          <div class='field'>
+            <input
+              class='block w-full appearance-none bg-transparent py-4 pl-2 pr-12 text-base text-slate-900 placeholder:text-slate-600 focus:outline-none sm:text-sm sm:leading-6 search__input field__input'
+              id='Search-In-Modal-1'
+              type='search'
+              name='q'
+              value=''
+              placeholder='{{ 'general.search.search' | t }}'
+              role='combobox'
+              aria-expanded='false'
+              aria-owns='predictive-search-results-list'
+              aria-controls='predictive-search-results-list'
+              aria-haspopup='listbox'
+              aria-autocomplete='list'
+              autocorrect='off'
+              autocomplete='off'
+              autocapitalize='off'
+              spellcheck='false'
+            >
+            <label class='field__label px-4 py-1 text-md' for='Search-In-Modal-1'>
+              {{- 'general.search.search' | t -}}
+            </label>
+            <input type='hidden' name='options[prefix]' value='last'>
+            <button class='search__button field__button' aria-label='{{ 'general.search.search' | t }}'>
+              <svg class='icon icon-search' aria-hidden='true' focusable='false'>
+                <use href="#icon-search">
+              </svg>
+            </button>
+          </div>
+
+          <div
+            class='predictive-search predictive-search--header rounded-lg border-0'
+            tabindex='-1'
+            data-predictive-search
+          >
+            <div class='predictive-search__loading-state'>
+              <svg
+                aria-hidden='true'
+                focusable='false'
+                class='spinner'
+                viewBox='0 0 66 66'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </div>
+          </div>
+
+          <span class='predictive-search-status hidden' role='status' aria-hidden='true'></span>
+        </form>
+      </predictive-search>
+
+      {%- if predictive_search.performed -%}
+        <div id='predictive-search-results'>
+          {%- if predictive_search.resources.products.size > 0 -%}
+            <h2
+              id='predictive-search-products'
+              class='predictive-search__heading text-body caption-with-letter-spacing'
+            >
+              {{ 'templates.search.products' | t }}
+
+              <svg
+                aria-hidden='true'
+                focusable='false'
+                class='spinner'
+                viewBox='0 0 66 66'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </h2>
+          {%- endif -%}
+          <ul
+            id='predictive-search-results-list'
+            class='predictive-search__results-list list-unstyled max-h-[18.375rem] divide-y divide-slate-200 overflow-y-auto rounded-b-lg border-t border-slate-200 text-sm leading-6'
+            role='listbox'
+            aria-labelledby='predictive-search-products'
+          >
+            {%- for product in predictive_search.resources.products -%}
+              <li
+                id='predictive-search-option-{{ forloop.index }}'
+                class='predictive-search__list-item'
+                role='option'
+                aria-selected='false'
+              >
+                <a
+                  href='{{ product.url }}'
+                  class='predictive-search__item predictive-search__item--link link link--text'
+                  tabindex='-1'
+                >
+                  {%- if product.featured_media != blank -%}
+                    <img
+                      class='predictive-search__image'
+                      src='{{ product.featured_media | image_url: width: 150 }}'
+                      alt='{{ product.featured_media.alt }}'
+                      width='50'
+                      height='{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}'
+                    >
+                  {%- endif -%}
+                  <div class='predictive-search__item-content{% unless settings.predictive_search_show_vendor or settings.predictive_search_show_price %} predictive-search__item-content--centered{% endunless %}'>
+                    {%- if settings.predictive_search_show_vendor -%}
+                      <span class='hidden'>{{ 'accessibility.vendor' | t }}</span>
+                      <div class='predictive-search__item-vendor caption-with-letter-spacing'>{{ product.vendor }}</div>
+                    {%- endif -%}
+                    <h3 class='predictive-search__item-heading h5'>{{ product.title }}</h3>
+                    {%- if settings.predictive_search_show_price -%}
+                      {% render 'price', product: product, use_variant: true, show_badges: false %}
+                    {%- endif -%}
+                  </div>
+                </a>
+              </li>
+            {%- endfor -%}
+            <li id='predictive-search-option-search-keywords' class='predictive-search__list-item' role='option'>
+              <button
+                class='predictive-search__item predictive-search__item--term link link--text h5 animate-arrow'
+                tabindex='-1'
+              >
+                {{ 'templates.search.search_for' | t: terms: predictive_search.terms }}
+                {% render 'icon-arrow' %}
+              </button>
+            </li>
+          </ul>
+
+          <div class='predictive-search__loading-state' aria-hidden='true'>
+            <svg
+              aria-hidden='true'
+              focusable='false'
+              class='spinner'
+              viewBox='0 0 66 66'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </div>
+
+        <span class='hidden' data-predictive-search-live-region-count-value>
+          {%- if search.results_count == 0 -%}
+            {{ 'templates.search.no_results' | t: terms: predictive_search.terms }}
+          {%- else -%}
+            {{
+              'templates.search.results_with_count'
+              | t: terms: predictive_search.terms, count: predictive_search.resources.products.size
+            }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+</search-form>

@@ -1,0 +1,275 @@
+<style>
+  #shopify-section-{{section.id}} {
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px
+  }
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+
+    padding-top:{{section.settings.mobile_padding_top}}px;
+    padding-bottom: {{section.settings.mobile_padding_bottom}}px
+  }
+  }
+</style>
+
+<div class='{{ section.settings.desktop_max_width }} mx-auto w-full'>
+  <article class='article-template bg-white' itemscope itemtype='http://schema.org/BlogPosting'>
+    <div class='mx-auto max-w-3xl text-base leading-7 text-gray-700'>
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'title' -%}
+            <dd class=' text-dark'>
+              <time>{{- article.published_at | time_tag: format: 'date' -}}</time>
+            </dd>
+            <h1 class='text-2xl font-extrabold tracking-tight text-dark md:text-3xl '>{{ article.title | escape }}</h1>
+            <div class='mt-6'>
+              <ul class='flex flex-wrap text-sm leading-6 -mt-6 -mx-5'>
+                <li class='flex items-center font-medium whitespace-nowrap px-5 mt-6'>
+                  <div class='text-sm leading-4'>
+                    <div class='text-dark'>{{ article.author }}</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          {%- when 'featured_image' -%}
+            {%- if article.image -%}
+              <figure class='mt-16'>
+                {%
+                  render 'responsive-image' with
+                  image: article.image,
+                  image_class: 'aspect-video rounded-xl bg-gray-50 object-cover',
+                  image_width: '1100px'
+                %}
+              </figure>
+            {%- endif -%}
+          {%- when 'content' -%}
+            <div
+              class='article-template mt-10'
+              itemprop='articleBody'
+              {{ block.shopify_attributes }}
+            >
+              {{ article.content }}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </article>
+  <article-comments class='block mt-20'>
+    {% if blog.comments_enabled? %}
+      <div class='flex flex-col md:flex-row md:justify-between md:items-center pb-10'>
+        <h2 class='text-charcoal text-xl'>Comments ({{ article.comments_count }})</h2>
+        <button class='border-black display-comment border-solid mt-10 md:my-0 border-2 flex items-center px-6 py-4 w-max'>
+          <svg xmlns='http://www.w3.org/2000/svg' width='19' height='18' viewBox='0 0 19 18' fill='none'>
+            <path d="M3.0417 2.06387L3.04153 2.06387C1.7843 2.06529 0.765486 3.0841 0.764062 4.34133V4.3415L0.764062 15.4305L0.764063 15.4306C0.765486 16.6879 1.7843 17.7067 3.04153 17.7081H3.0417L14.9815 17.7081L14.9817 17.7081C16.2389 17.7067 17.2578 16.6879 17.2592 15.4306V15.4305V11.6521C17.2592 11.3342 17.0015 11.0766 16.6836 11.0766C16.3658 11.0766 16.1081 11.3342 16.1081 11.6521V15.4301C16.1074 16.0522 15.6034 16.5563 14.9814 16.5569H3.04184C2.41986 16.5563 1.9159 16.0523 1.91512 15.4302C1.91512 15.4302 1.91512 15.4302 1.91512 15.4301V4.34168C1.91512 4.34165 1.91512 4.34161 1.91512 4.34158C1.9159 3.71974 2.41979 3.21571 3.04178 3.21492C3.04181 3.21492 3.04184 3.21492 3.04187 3.21492L6.81991 3.21492C7.13779 3.21492 7.39543 2.95727 7.39543 2.63939C7.39543 2.32172 7.13783 2.06387 6.81991 2.06387L3.0417 2.06387Z" fill="#333333" stroke="#333333" stroke-width="0.3"/>
+            <path d="M9.84821 11.9177L9.95428 12.0238C9.88392 12.0941 9.79667 12.145 9.70093 12.1715L6.09675 13.17L6.09671 13.17C5.89684 13.2253 5.68286 13.1688 5.53616 13.0224L5.536 13.0222C5.38953 12.8755 5.33302 12.6615 5.38858 12.4615M9.84821 11.9177L6.53143 8.89748M9.84821 11.9177L9.95428 12.0238L17.5458 4.43196L17.5459 4.43184C18.351 3.62496 18.351 2.31875 17.5459 1.51187L17.5458 1.51175L17.0464 1.01242C16.24 0.206015 14.9326 0.206015 14.1262 1.01242L6.53457 8.60409C6.46422 8.67444 6.4134 8.76169 6.38687 8.85744L6.53143 8.89748M9.84821 11.9177L6.53143 8.89748M5.38858 12.4615L5.53311 12.5017L5.38855 12.4616L5.38858 12.4615ZM5.38858 12.4615L6.38687 8.85744L6.53143 8.89748M16.7318 3.61824L16.3867 3.96334L14.5949 2.17152L14.9402 1.8263L14.9403 1.82628C15.2971 1.46947 15.8756 1.46947 16.2324 1.82628L16.2324 1.82629L16.7318 2.32546C16.7318 2.32551 16.7319 2.32556 16.7319 2.32562C16.7319 2.32562 16.7319 2.32562 16.7319 2.32562C17.0881 2.68299 17.088 3.26113 16.7318 3.61824ZM9.57146 10.7784L7.77995 8.98675L13.781 2.98552L15.5727 4.77719L9.57146 10.7784ZM6.76933 11.7892L7.24342 10.0779L8.48046 11.3151L6.76933 11.7892Z" fill="#333333" stroke="#333333" stroke-width="0.3"/>
+          </svg>
+          <span class='ml-4 font-avante uppercase text-sm leading-4 '>Leave A Comment</span>
+        </button>
+      </div>
+
+      {% paginate article.comments by 5 %}
+        {% comment %}
+          #comments is required, it is used as an anchor link by Shopify.
+        {% endcomment %}
+        <div class='comments pt-10 pb-20 '>
+          <div class='comment-form py-10 hidden'>
+            {% form 'new_comment', article %}
+              {{ form.errors | default_errors }}
+
+              <div class='grid grid--small'>
+                <div class='grid__item medium-up--one-half'>
+                  <label class='block' for='CommentAuthor'>Author</label>
+                  <input
+                    class='w-full border-b border-r-0 border-l-0 border-t-0 border-solid border-dark input-full{% if form.errors contains 'author' %} error{% endif %}'
+                    type='text'
+                    name='comment[author]'
+                    id='CommentAuthor'
+                    value='{{ form.author }}'
+                    autocapitalize='words'
+                  >
+                </div>
+                <div class='grid__item medium-up--one-half'>
+                  <label class='block mt-4' for='CommentEmail'> Email </label>
+                  <input
+                    class='w-full border-b border-r-0 border-l-0 border-t-0 border-solid border-dark input-full{% if form.errors contains 'email' %} error{% endif %}'
+                    type='email'
+                    name='comment[email]'
+                    id='CommentEmail'
+                    value='{{ form.email }}'
+                    autocorrect='off'
+                    autocapitalize='off'
+                  >
+                </div>
+              </div>
+
+              <label class='block mt-4' for='CommentBody'> Message </label>
+              <textarea
+                class='w-full border-b border-r-0 border-l-0 border-t-0 border-solid border-dark input-full{% if form.errors contains 'body' %} error{% endif %}'
+                name='comment[body]'
+                id='CommentBody'
+              >{{ form.body }}</textarea>
+
+              {% if blog.moderated? %}
+                <p>
+                  <small>{{ 'blogs.comments.moderated' | t }}</small>
+                </p>
+              {% endif %}
+
+              <button type='submit' class='btn btn--secondary max-w my-4 '>Submit</button>
+            {% endform %}
+          </div>
+
+          {% for comment in article.comments %}
+            <li
+              id='{{ comment.id }}'
+              class='comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}'
+            >
+              <div>
+                <div class='flex items-center justify-between pb-6'>
+                  <div class='h5 comment-author flex items-center'>
+                    <span class='w-16 h-16 text-black flex items-center justify-center rounded-full uppercase bg-[#f5f5f5]'>
+                      {{- comment.author | slice: 0 -}}
+                    </span>
+                    <div class='ml-4'>
+                      <span class='block'>{{ comment.author }}</span>
+                      <span class='comment-date block md:hidden'>
+                        {{ comment.created_at | time_tag: '%0m/%0d/%y' }}
+                      </span>
+                    </div>
+                  </div>
+                  <span class='comment-date hidden md:block'>
+                    {{ comment.created_at | time_tag: '%0m/%0d/%y' }}
+                  </span>
+                </div>
+                <div class='rte font-avante'>
+                  {{ comment.content }}
+                </div>
+              </div>
+            </li>
+
+            {% unless forloop.last %}
+              <li><hr class='hr--clear'></li>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      {% endpaginate %}
+    {% endif %}
+  </article-comments>
+</div>
+<script type='application/ld+json'>
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ shop.url | append: page.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}
+      "description": {{ article.excerpt | strip_html | json }},
+    {% endif %}
+    {% if article.image %}
+      {% assign image_size = article.image.width | append: 'x' %}
+      "image": [
+        {{ article | image_url: image_size | prepend: "https:" | json }}
+      ],
+    {% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      {% if settings.share_image %}
+        {% assign image_size = settings.share_image.width | append: 'x' %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": {{ settings.share_image.height | json }},
+          "url": {{ settings.share_image | image_url: image_size | prepend: "https:" | json }},
+          "width": {{ settings.share_image.width | json }}
+        },
+      {% endif %}
+      "name": {{ shop.name | json }}
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "px-6 px-16-desktop",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-medium",
+      "label": "Medium Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_image",
+      "name": "Featured Image",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

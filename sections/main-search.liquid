@@ -1,0 +1,112 @@
+<style>
+  #shopify-section-{{section.id}} {
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px
+  }
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+
+    padding-top:{{section.settings.mobile_padding_top}}px;
+    padding-bottom: {{section.settings.mobile_padding_bottom}}px
+  }
+  }
+</style>
+
+<search-template class='bg-white {{ section.settings.desktop_max_width }} mx-auto w-full block'>
+  <input
+    class='search-input block w-full appearance-none bg-transparent py-4 pl-4 pr-12 text-base text-slate-900 placeholder:text-slate-600 focus:outline-none sm:text-sm sm:leading-6'
+    placeholder='Find anything...'
+    aria-label='Search components'
+    role='combobox'
+    type='text'
+    aria-expanded='true'
+    aria-autocomplete='list'
+    data-headlessui-state='open'
+    value=''
+    style='caret-color: rgb(107, 114, 128);'
+    tabindex='0'
+  >
+  <div class='absolute inset-x-0 z-10 transform !overflow-visible hidden search-results'>
+    <div class='relative mx-auto grid'>
+      <nav
+        class='grid bg-white py-8 px-6 grid-cols-2 gap-x-4 gap-y-4 md:grid-cols-5 {{ section.settings.desktop_max_width }} mx-auto'
+    
+      >
+        <div class='col-span-2 md:col-span-1'>
+          <h3 class='text-base font-medium text-gray-500 uppercase'>Suggested</h3>
+          <ul role='list' class='mt-5 space-y-6 suggested-results'>
+            <li class='flow-root'>
+              <a
+                href='/pages/careers?_pos=1&amp;_psq=car&amp;_ss=e&amp;_v=1.0'
+                class='-m-3 rounded-md p-3 text-sm font-medium text-gray-light hover:text-black transition duration-150 ease-in-out hover:bg-gray-50'
+                ><span class='text-black'>Careers</a>
+            </li>
+          </ul>
+        </div>
+      <div class='grid grid-cols-4 col-start-2 gap-x-4 gap-y-4 col-span-4 search-results-grid'>
+      
+      </div>
+        
+      </nav>
+    </div>
+  </div>
+</search-template>
+
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "px-6 px-16-desktop",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-medium",
+      "label": "Medium Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 96,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 64,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    }
+  ]
+}
+{% endschema %}

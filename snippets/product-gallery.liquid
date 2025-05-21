@@ -1,0 +1,35 @@
+<div class='flex'>
+  <!-- Image selector -->
+  <thumbnail-slider class='relative sm:mr-[16px] lg:mr-[32px] hidden w-max max-w-[80px] mx-auto sm:block overflow-hidden h-full max-h-[450px]'>
+    <div class='swiper-wrapper' aria-orientation='horizontal' role='tablist'>
+      {% for media in product.media %}
+        <div class='swiper-slide relative bg-white h-24 w-[25%] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50'>
+          {%
+            render 'responsive-image' with
+            image: media,
+            image_class: 'w-full h-full object-center object-cover',
+            image_width: '300x'
+          %}
+        </div>
+      {% endfor %}
+
+      <!-- More images... -->
+    </div>
+  </thumbnail-slider>
+
+  <product-gallery class='w-full swiper-product-gallery overflow-hidden'>
+    <div class='swiper-wrapper'>
+      {% for media in product.media %}
+        {%
+          render 'responsive-image' with
+          image: media,
+          image_class: 'swiper-slide product__media w-full h-full object-center object-cover sm:rounded-lg',
+          image_width: '1200x'
+        %}
+      {% endfor %}
+    </div>
+    <div style='bottom: auto' class='swiper-pagination sm:hidden'></div>
+
+    <!-- More images... -->
+  </product-gallery>
+</div>

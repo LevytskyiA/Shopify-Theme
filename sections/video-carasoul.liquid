@@ -1,0 +1,278 @@
+{% for block in section.blocks %}
+  <div class='hero-banner bg-center bg-cover h-full object-cover relative'>
+    <video
+      class='hidden md:block'
+      src='{{block.settings.video_url}}'
+      autoplay
+      loop
+      muted
+    ></video>
+    <video
+      class='block md:hidden'
+      src='{{block.settings.mobile_video_url}}'
+      autoplay
+      loop
+      muted
+    ></video>
+
+    <div class='absolute top-0 left-0 h-full w-full flex flex-col justify-end items-start text-white px-6 md:px-16 pb-14 md:pb-20 z-10'>
+      <h2
+        class='text-white {{ block.settings.heading_size }} {{block.settings.font_weight}} pb-3'
+        {{ block.shopify_attributes }}
+      >
+        {{ block.settings.heading | replace: '&lt;', '<' | replace: '&gt;', '>' }}
+      </h2>
+      <div
+        class='text-white pb-3'
+        {{ block.shopify_attributes }}
+      >
+        {{ block.settings.text | replace: '&lt;', '<' | replace: '&gt;', '>' }}
+      </div>
+      <div class='flex'>
+        <a
+          {% if block.settings.button_link == blank %}
+            role='link' aria-disabled='true'
+          {% else %}
+            href='{{ block.settings.button_link }}'
+          {% endif %}
+          class='{{block.settings.button_style}}'
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.button_label | escape }}
+        </a>
+        {% if block.settings.button_link_two != blank %}
+          <a
+            {% if block.settings.button_link_two == blank %}
+              role='link' aria-disabled='true'
+            {% else %}
+              href='{{ block.settings.button_link_two }}'
+            {% endif %}
+            class='{{block.settings.button_style_two}} hidden md:block ml-6 '
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.button_label_two | escape }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    <div aria-hidden='true' class='absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-black opacity-50'></div>
+  </div>
+{% endfor %}
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Video",
+      "label": "t:sections.video.settings.heading.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "t:sections.video.settings.cover_image.label"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Video"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "t:sections.video.settings.video_url.label",
+      "info": "t:sections.video.settings.video_url.info"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Video"
+    },
+    {
+      "type": "url",
+      "id": "mobile_video_url",
+      "label": "t:sections.video.settings.video_url.label",
+      "info": "t:sections.video.settings.video_url.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.rich-text.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Talk about your brand",
+          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "default": "h1",
+          "label": "H1"
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "options": [
+            {
+              "value": "font-bold",
+              "label": "Bold"
+            },
+            {
+              "value": "font-semibold",
+              "label": "Semibold"
+            },
+            {
+              "value": "font-normal",
+              "label": "Normal"
+            }
+          ],
+          "default": "font-bold",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.rich-text.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+          "label": "t:sections.rich-text.blocks.text.settings.text.label"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.rich-text.blocks.button.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Button One Settings"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "t:sections.rich-text.blocks.button.settings.button_label.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.rich-text.blocks.button.settings.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "options": [
+            {
+              "value": "button-primary",
+              "label": "Button Primary"
+            },
+            {
+              "value": "button-secondary",
+              "label": "Button Secondary"
+            },
+            {
+              "value": "button-white",
+              "label": "Button White"
+            },
+            {
+              "value": "button-small",
+              "label": "Button Small"
+            },
+            {
+              "value": "button-link",
+              "label": "Button Link"
+            }
+          ],
+          "default": "button-white",
+          "label": "Button Style"
+        },
+        {
+          "type": "header",
+          "content": "Button Two Settings"
+        },
+        {
+          "type": "text",
+          "id": "button_label_two",
+          "default": "Button label",
+          "label": "t:sections.rich-text.blocks.button.settings.button_label.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link_two",
+          "label": "t:sections.rich-text.blocks.button.settings.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style_two",
+          "options": [
+            {
+              "value": "button-primary",
+              "label": "Button Primary"
+            },
+            {
+              "value": "button-secondary",
+              "label": "Button Secondary"
+            },
+            {
+              "value": "button-white",
+              "label": "Button White"
+            },
+            {
+              "value": "button-small",
+              "label": "Button Small"
+            },
+            {
+              "value": "button-link",
+              "label": "Button Link"
+            }
+          ],
+          "default": "button-white",
+          "label": "Button Style (Two)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero"
+    }
+  ]
+}
+{% endschema %}

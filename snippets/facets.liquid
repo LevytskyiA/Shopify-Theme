@@ -1,0 +1,299 @@
+<div class='filters-wrap fixed hidden lg:relative lg:block top-0 left-0 z-[99999] lg:z-[0] h-full w-full lg:min-w-[300px] lg:w-[300px]'>
+  <div class='absolute w-full h-full top-0 left-0 bg-black lg:!bg-[transparent] opacity-30 close-filters'></div>
+  <div class='filters-wrap-inner absolute lg:relative top-0 left-0 bg-white h-full min-w-[85%] max-w-[85%] w-[85%] lg:w-full p-4 lg:p-0'>
+    <button
+      class='absolute close-filters right-4 top-4 cursor-pointer p-0 border-0 lg:hidden bg-white'
+      role='link'
+      tabindex='0'
+      aria-label='close filters'
+    >
+      <svg
+        class='pointer-events-none'
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+      >
+        <path d="M18 6L6 18" stroke="#151515" stroke-width="2" stroke-linecap="square"/>
+        <path d="M6 6L18 18" stroke="#151515" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    </button>
+    <div id='filters-wrap' class='overflow-y-scroll overflow-x-hidden h-[95%] lg:overflow-y-hidden'>
+      <div class='uppercase text-[#231F20] md:hidden text-base font-proximaBold font-semibold pb-3'>Filter</div>
+      <div class='filtered-by-wrap text-[18px] font-proximaRegular font-normal text-neutral800 leading-[150%]'>
+        Filtered By:
+        <div class='filtered-by flex mt-4 flex-wrap'>
+          {%- for filter in collection.filters -%}
+            {%- for value in filter.active_values -%}
+              {%- unless filter.type == 'price_range' -%}
+                <span class='selected-filter flex items-center'>
+                  <span class='selected-filter-remove cursor-pointer' value='{{ value.value }}'>
+                    <svg width='20' height='21' viewBox='0 0 20 21' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                      <g id="x">
+                      <path id="Icon" d="M5 15.4148L15 5.4148M5 5.41479L15 15.4148" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
+                    </svg>
+                  </span>
+                  <span>{{ value.label | split: ':' | last | escape | strip }} ({{ value.count }})</span>
+                </span>
+              {%- endunless -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <form id='FacetFiltersForm' class='facets__form'>
+        <div id='FacetsWrapperDesktop' class=''>
+          {%- for filter in collection.filters -%}
+            {% case filter.type %}
+              {% when 'list' %}
+                {% if filter.label == 'Tag' %}
+                  {% assign tags = 'style,shape' | split: ',' %}
+
+                  {% for tag in tags %}
+                    <details
+                      id='Details-tags-{{ forloop.index }}-{{ section.id }}'
+                      class='pt-8 disclosure-has-popup facets__disclosure js-filter'
+                      data-index='{{ forloop.index }}'
+                    >
+                      <summary class='facets__summary caption-large focus-offset cursor-pointer'>
+                        <div class='flex justify-between'>
+                          <span class='font-proximaRegular text-[18px] font-normal leading-[150%] text-neutral800'>
+                            {{- tag | escape | capitalize -}}
+                          </span>
+
+                          <svg
+                            class='icon-plus'
+                            width='24'
+                            height='25'
+                            viewBox='0 0 24 25'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
+                            <g id="Icons / 24px / Plus">
+                            <path id="Icon" fill-rule="evenodd" clip-rule="evenodd" d="M13 3.91479H11V11.9148H3V13.9148H11V21.9148H13V13.9148H21V11.9148H13V3.91479Z" fill="#191919"/>
+                            </g>
+                          </svg>
+
+                          <svg
+                            class='icon-minus'
+                            xmlns='http://www.w3.org/2000/svg'
+                            width='24'
+                            height='25'
+                            viewBox='0 0 24 25'
+                            fill='none'
+                          >
+                            <rect x="3" y="13.9148" width="2" height="18" transform="rotate(-90 3 13.9148)" fill="#191919"/>
+                          </svg>
+                        </div>
+                      </summary>
+
+                      <div class='mt-[20px]'>
+                        {%- for value in filter.values -%}
+                          {% if value.label contains tag %}
+                            <div class='flex items-center mb-3 {% if value.count == 0 %} !hidden {% endif %}'>
+                              <input
+                                type='checkbox'
+                                name='{{ value.param_name }}'
+                                value='{{ value.value }}'
+                                data-type='{{ filter.label }}'
+                                data-value='{{value.value | split: tag | last | split: ':' | last | escape | strip}}'
+                                data-param='{{ value.param_name }}'
+                                data-count='({{value.count}})'
+                                data-key='{% if value.param_name contains 'tag' %}tag{% elsif value.param_name contains 'type' %}type{% else %}variantOption{% endif %}'
+                                class='{% if value.count == 0 %} !hidden {% endif %} w-6 h-6 !ring-0 cursor-pointer !shadow-none !border-2 !border-[#B2B2B2] !rounded-[6px] checked:!bg-[#333333] checked:!border-[#333333]'
+                                id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                                {% if value.active %}
+                                  checked
+                                {% endif %}
+                                {% if value.count == 0 and value.active == false %}
+                                  disabled
+                                {% endif %}
+                              >
+                              <label
+                                for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                                class='cursor-pointer ml-3 text-base font-proximaRegular font-normal leading-[150%] capitalize text-neutral800'
+                              >
+                                {{ value.label | split: tag | last | split: ':' | last | escape | strip }} (
+                                {{- value.count -}}
+                                )
+                              </label>
+                            </div>
+                          {% endif %}
+                        {%- endfor -%}
+                      </div>
+                    </details>
+                  {% endfor %}
+
+                {% else %}
+                  <details
+                    id='Details-{{ forloop.index }}-{{ section.id }}'
+                    class='pt-8 disclosure-has-popup facets__disclosure js-filter'
+                    data-index='{{ forloop.index }}'
+                  >
+                    <summary class='facets__summary caption-large focus-offset cursor-pointer'>
+                      <div class='flex justify-between'>
+                        <span class='font-proximaRegular text-[18px] font-normal leading-[150%] text-neutral800'>
+                          {{- filter.label | escape -}}
+                        </span>
+
+                        <svg
+                          class='icon-plus'
+                          width='24'
+                          height='25'
+                          viewBox='0 0 24 25'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
+                          <g id="Icons / 24px / Plus">
+                          <path id="Icon" fill-rule="evenodd" clip-rule="evenodd" d="M13 3.91479H11V11.9148H3V13.9148H11V21.9148H13V13.9148H21V11.9148H13V3.91479Z" fill="#191919"/>
+                          </g>
+                        </svg>
+
+                        <svg
+                          class='icon-minus'
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='24'
+                          height='25'
+                          viewBox='0 0 24 25'
+                          fill='none'
+                        >
+                          <rect x="3" y="13.9148" width="2" height="18" transform="rotate(-90 3 13.9148)" fill="#191919"/>
+                        </svg>
+                      </div>
+                    </summary>
+                    <div class='mt-[20px]'>
+                      {%- for value in filter.values -%}
+                        <div class='flex items-center mb-3 {% if value.count == 0 %} !hidden {% endif %}'>
+                          <input
+                            type='checkbox'
+                            name='{{ value.param_name }}'
+                            value='{{ value.value }}'
+                            data-value='{{ value.value }}'
+                            data-param='{{ value.param_name }}'
+                            data-count='({{value.count}})'
+                            data-type='{{ filter.label }}'
+                            data-key='{% if value.param_name contains 'tag' %}tag{% elsif value.param_name contains 'type' %}type{% else %}variantOption{% endif %}'
+                            class='{% if value.count == 0 %} !hidden {% endif %} w-6 h-6 !ring-0 cursor-pointer !shadow-none !border-2 !border-[#B2B2B2] !rounded-[6px] checked:!bg-[#333333] checked:!border-[#333333]'
+                            id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                            {% if value.active %}
+                              checked
+                            {% endif %}
+                            {% if value.count == 0 and value.active == false %}
+                              disabled
+                            {% endif %}
+                          >
+                          <label
+                            for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                            class='cursor-pointer ml-3 text-base font-proximaRegular font-normal leading-[150%] capitalize text-neutral800'
+                          >
+                            {{ value.label | escape }} ({{ value.count }})
+                          </label>
+                        </div>
+                      {%- endfor -%}
+                    </div>
+                  </details>
+                {% endif %}
+
+              {% when 'price_range' %}
+                <details
+                  id='Details-{{ forloop.index }}-{{ section.id }}'
+                  class='pt-8'
+                  data-index='{{ forloop.index }}'
+                >
+                  <summary class='facets__summary caption-large focus-offset cursor-pointer text-sm'>
+                    <div class='flex justify-between'>
+                      <span class='font-proximaRegular text-[18px] font-normal leading-[150%] text-neutral800'>
+                        {{- filter.label | escape -}}
+                      </span>
+                      <svg
+                        class='icon-plus'
+                        width='24'
+                        height='25'
+                        viewBox='0 0 24 25'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <g id="Icons / 24px / Plus">
+                        <path id="Icon" fill-rule="evenodd" clip-rule="evenodd" d="M13 3.91479H11V11.9148H3V13.9148H11V21.9148H13V13.9148H21V11.9148H13V3.91479Z" fill="#191919"/>
+                        </g>
+                      </svg>
+
+                      <svg
+                        class='icon-minus'
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='24'
+                        height='25'
+                        viewBox='0 0 24 25'
+                        fill='none'
+                      >
+                        <rect x="3" y="13.9148" width="2" height="18" transform="rotate(-90 3 13.9148)" fill="#191919"/>
+                      </svg>
+                    </div>
+                  </summary>
+                  <price-range class='facets__price pt-4 flex items-center justify-between'>
+                    <div class='w-[45%]'>
+                      <span class='field-currency'>{{ cart.currency.symbol }}</span>
+                      <label
+                        class='field__label text-sm font-medium text-gray-700'
+                        for='Filter-{{ filter.label | escape }}-GTE'
+                      >
+                        {{- 'products.facets.from' | t -}}
+                      </label>
+                      <div class='field'>
+                        <input
+                          class='field__input focus:!ring-0 block w-full sm:text-sm border border-solid border-gray-300'
+                          name='{{ filter.min_value.param_name }}'
+                          id='Filter-{{ filter.label | escape }}-GTE'
+                          type='number'
+                          placeholder='0'
+                          min='0'
+                          value='{{filter.min_value.value | divided_by: 100}}'
+                        >
+                      </div>
+                    </div>
+
+                    <div class='w-[45%]'>
+                      <span class='field-currency'>{{ cart.currency.symbol }}</span>
+                      <label
+                        class='field__label text-sm font-medium text-gray-700'
+                        for='Filter-{{ filter.label | escape }}-LTE'
+                      >
+                        {{- 'products.facets.to' | t -}}
+                      </label>
+                      <div class='field'>
+                        <input
+                          class='field__input focus:!ring-0 block w-full sm:text-sm border border-solid border-gray-300'
+                          name='{{ filter.max_value.param_name }}'
+                          id='Filter-{{ filter.label | escape }}-LTE'
+                          type='number'
+                          min='0'
+                          placeholder='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                          max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                          {% if filter.max_value.value %}
+                            value='{{ filter.max_value.value | divided_by: 100}}'
+                          {% else %}
+                            value='{{ filter.range_max | divided_by: 100}}'
+                          {% endif %}
+                        >
+                      </div>
+                    </div>
+                  </price-range>
+                </details>
+            {% endcase %}
+          {% endfor %}
+          <noscript>
+            <button type='submit' class='facets__button-no-js button button--tertiary'>
+              {{ 'products.facets.filter_button' | t }}
+            </button>
+          </noscript>
+        </div>
+
+        {% if collection.current_vendor or collection.current_type %}
+          <input type='hidden' name='q' value='{{ collection.current_vendor }}{{ collection.current_type }}'>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>

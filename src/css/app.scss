@@ -1,0 +1,83 @@
+/** Shopify Overrides **/
+.shopify-challenge__button {
+  --tw-text-opacity: 1;
+  --tw-border-opacity: 1;
+  background-color: initial;
+  border-color: rgba(101, 28, 50, var(--tw-border-opacity));
+  border-width: 1px;
+  color: rgba(101, 28, 50, var(--tw-text-opacity));
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 12px 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition-duration: 0.15s;
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover,
+  &:focus {
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+    background-color: rgba(252, 245, 245, var(--tw-bg-opacity));
+    color: rgba(101, 28, 50, var(--tw-text-opacity));
+  }
+}
+
+.shopify-policy__container {
+  max-width: 1440px !important;
+}
+
+/* Header */
+#shopify-section-layout-header {
+  position: relative;
+  background-color: #fff;
+
+  &.shopify-section-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 49;
+  }
+
+  &.shopify-section-header-hidden {
+    transform: translateY(-100%);
+  }
+
+  &.animate {
+    transition: transform 0.15s ease-out;
+  }
+}
+
+button,
+select,
+fieldset {
+  border: 0;
+}
+
+@keyframes fadeInOnly {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeInOnly 0.5s ease-out both;
+}
+
+.description-list li {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  padding-block: 8px;
+}
+
+.description-list li::before {
+  content: '';
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9IkNoZWNrbGlzdCBJY29uIj4KPHBhdGggaWQ9IlBhdGggMTYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTYuMTY3NyAzLjc5MDI4TDE3LjE2NTYgNC41NDMwOEw3LjY5ODA4IDE3LjA5MzFMMi44MjcxNSAxMC4zNjY2TDMuODM5NTggOS42MzM0NUw3LjcxODM2IDE0Ljk5TDE2LjE2NzcgMy43OTAyOFoiIGZpbGw9IiMwRjZCRkYiLz4KPC9nPgo8L3N2Zz4K");
+  height: 20px;
+  width: 20px;
+  margin-inline-end: 8px;
+}

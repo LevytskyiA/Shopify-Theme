@@ -1,0 +1,45 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class='relative bg-indigo-800'>
+  <div class='absolute inset-0'>
+    {%
+      render 'responsive-image' with
+      image: page.metafields.my_fields.banner,
+      image_class: 'h-full object-cover',
+      image_width: '1500x'
+    %}
+    <div class='absolute inset-0 bg-gray-800 mix-blend-multiply' aria-hidden='true'></div>
+  </div>
+  <div class='relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8'>
+    <h1 class='text-4xl text-center font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl'>
+      {{ page.title }}
+    </h1>
+  </div>
+</div>
+<!--
+  This example requires Tailwind CSS v2.0+
+
+  This example requires some changes to your config:
+
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/typography'),
+    ],
+  }
+  ```
+-->
+<div class='relative max-w-7xl m-auto py-4 px-4 md:px-16 md:py-12 bg-white overflow-hidden'>
+  <div class='mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto'>
+    {{ page.content }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "tag": "section"
+}
+{% endschema %}

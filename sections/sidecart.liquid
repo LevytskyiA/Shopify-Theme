@@ -1,0 +1,285 @@
+<side-cart
+  class="sidecart__wrapper fixed w-full h-full top-0 z-[999999] flex justify-end transform translate-x-full transition-transform duration-300 ease-in-out "
+  data-count="{{ cart.item_count }}"
+  data-subtotal="{{ cart.total_price | money }}"
+>
+  <div
+    class="sidecart__close-cart side-cart-overlay absolute bg-[#36252080] top-0 left-0 w-full h-full hidden"
+  ></div>
+
+  <div
+    id="sidecart-inner"
+    class="sidecart__inner relative bg-white w-full sm:w-[500px] h-full border-0 border-t border-solid border-[#000000] pb-4 overflow-x-hidden"
+  >
+    <div class="w-full overflow-y-scroll">
+      <span class="sidecart__close-cart float-right fixed top-[10px] right-[10px] cursor-pointer z-20">
+        <svg
+          class="pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M6 18L18 6M6 6L18 18" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <header class="border fixed bg-white border-b border-t-0 border-r-0 border-gold border-solid border-l-0 w-full z-10 py-4 -mt-[1px]">
+        <div class="px-6 md:px-8 w-full">
+          <h1 class="text-xl m-0 text-black">My Cart ({{ cart.item_count }})</h1>
+        </div>
+      </header>
+
+      {% if cart.empty? %}
+        {% include 'empty-cart' %}
+      {% else %}
+        {% assign cart_has_subs = false %}
+        {% for item in cart.items %}
+          {% if item.selling_plan_allocation %}
+            {% assign cart_has_subs = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="sidecart-items opacity-80 px-6 md:px-8 mt-24">
+          {% for line_item in cart.items %}
+            {% assign item_selling_plan = line_item.selling_plan_allocation.selling_plan.id %}
+            <div
+              class="sidecart-item bg-white pt-4 pb-6 border border-b border-t-0 border-r-0 border-gold border-solid border-l-0"
+              data-id="{{line_item.key}}"
+              {% if item_selling_plan %}
+                data-selling-plan="{{item_selling_plan}}"
+              {% endif %}
+            >
+              <div class="flex relative">
+                <img
+                  src="{{ line_item.image | image_url }}"
+                  alt="{{ line_item.image.alt }}"
+                  height="{{ line_item.image.height }}"
+                  width="{{ line_item.image.width }}"
+                  loading="lazy"
+                  class="min-w-[90px] w-[90px] h-[90px]  sm:min-w-[100px] sm:w-[100px] sm:h-[100px] object-cover"
+                >
+
+                <div class="ml-4 flex flex-col justify-between w-full pr-4">
+                  <div>
+                    <div class="text-sm text-black">
+                      {{ line_item.variant.product.title }}
+                    </div>
+                    <div class="mt-1">&#x2022; {{ line_item.variant.title }}</div>
+                    <input id="{{line_item.id}}" type="text" class="hidden" readonly value="{{ line_item.quantity }}">
+                    <div class="mt-1 text-sm italic text-black">
+                      {% if line_item.selling_plan_allocation %}
+                        {{
+                          line_item.variant.metafields.custom.cart_variant_title
+                          | default: line_item.selling_plan_allocation.selling_plan.name
+                        }}
+                      {% else %}
+                        {{ line_item.variant.metafields.custom.cart_variant_title | default: '' }}
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="text-base flex justify-between">
+                    <div class="flex">
+                      {% if line_item.selling_plan_allocation.compare_at_price > line_item.price %}
+                        <span
+                          class="text-gold line-through pr-1 text-[15px]"
+                        >
+                          {{- line_item.selling_plan_allocation.compare_at_price | times: line_item.quantity | money -}}
+                        </span>
+                      {% endif %}
+                      <div class="text-[15px] flex items-center gap-2 text-black">
+                        <span
+                          {% if line_item.original_line_price > line_item.final_line_price %}
+                            class="text-gold"
+                          {% endif %}
+                        >
+                          {{- line_item.final_line_price | money -}}
+                        </span>
+
+                        {% if line_item.original_line_price > line_item.final_line_price %}
+                          <s>{{ line_item.original_line_price | money }}</s>
+                          {% assign percentage = 0 %}
+                          {% if line_item.original_line_price > line_item.final_line_price %}
+                            {% assign difference = line_item.original_line_price | minus: line_item.final_line_price %}
+                            {% assign percentage = difference
+                              | times: 100
+                              | divided_by: line_item.original_line_price
+                            %}
+                          {% endif %}
+                          <span class="text-gold text-xs">{{ percentage }}% off applied</span>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <span class="sidecart__remove cursor-pointer right-0 top-0 absolute" data-id="{{line_item.key}}">
+                      <svg
+                        class="pointer-events-none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_3_4539)">
+                        <path d="M10.909 1.09088L1.09082 10.9091" stroke="#FEF1DE" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                        <path d="M10.909 10.9091L1.09082 1.09088" stroke="#FEF1DE" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                        </g>
+                        <defs>
+                        <clipPath id="clip0_3_4539">
+                        <rect width="12" height="12" fill="white"/>
+                        </clipPath>
+                        </defs>
+                      </svg>
+                    </span>
+                  </div>
+
+                  <div class="flex flex-row h-6 w-24 rounded-lg relative bg-transparent mt-1">
+                    <button
+                      data-action="decrement"
+                      class="p-0 h-full flex justify-center items-center cursor-pointer outline-none quantity_btn text-black border-0"
+                    >
+                      <svg
+                        class="pointer-events-none"
+                        viewBox="0 0 14 2"
+                        width="14"
+                        height="2"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line y1="1.40003" x2="14" y2="1.40003" stroke="black" strokeWidth="1.2"></line>
+                      </svg>
+                    </button>
+                    <input
+                      type="number"
+                      class="text-center w-full flex items-center outline-none border-0 quantity_input text-black"
+                      style="-moz-appearance: textfield;"
+                      name="quantity_input"
+                      value="{{line_item.quantity}}"
+                      readonly
+                    >
+                    <button
+                      data-action="increment"
+                      class="p-0 h-full cursor-pointer flex justify-center items-center quantity_btn text-black border-0"
+                    >
+                      <svg
+                        class="pointer-events-none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 17 16"
+                        fill="none"
+                        width="17"
+                        height="16"
+                      >
+                        <path d="M3.10001 8.00003H14.1"  stroke="black" strokeWidth="0.9" strokeLinecap="square" strokeLinejoin="round"></path><path d="M8.6001 2.50003V13.5" stroke="black" strokeWidth="0.9" strokeLinecap="square" strokeLinejoin="round"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {% if line_item.variant.metafields.custom.cart_upsell != blank %}
+                {% assign upsell_variant = line_item.variant.metafields.custom.cart_upsell.value %}
+                <div class="pt-4">
+                  {% assign selling_plan = upsell_variant.selling_plan_allocations.first.selling_plan.id %}
+                  <button
+                    class="sidecart__add sidecart__upsell button button--primary button__solid button__outline !px-4 w-full text-[#221F20] font-semibold hover:bg-neutral800 hover:text-white"
+                    {% if selling_plan %}
+                      data-selling-plan="{{selling_plan}}"
+                    {% endif %}
+                    data-id="{{upsell_variant.id}}"
+                    data-quantity="{% if upsell_variant.title contains '3' %}3{% else %}1{% endif %}"
+                  >
+                    {{ line_item.variant.metafields.custom.cart_upsell_title }}
+                  </button>
+                </div>
+              {% endif %}
+              {% if line_item.properties._prevId %}
+                <div class="pt-4 flex justify-center text-[14px] sm:text-base">
+                  Your {{ line_item.variant.title }} is in the bag!
+                  <button
+                    class="sidecart__add sidecart__upsell sidecart__undo ml-2 underline"
+                    {% if line_item.properties._selling_plan %}
+                      data-selling-plan="{{line_item.properties._selling_plan}}"
+                    {% endif %}
+                    data-id="{{line_item.properties._prevId}}"
+                  >
+                    {{ 'templates.cart.undo' | t }}
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="mt-[15px] sm:mt-[21px] absolute w-full sm:w-[500px] bottom-0 py-6 bg-white z-50 side-cart__total--container {% if cart.empty? %} hidden {% endif %}">
+    <div class="py-2 pt-5 border border-t border-r-0 border-secondaryYellow300 border-solid border-l-0 border-b-0 ">
+      <div class="flex justify-between items-center text-[14px] sm:text-base px-6 sm:px-8">
+        <span class="text-lg">{{ 'general.cart.subtotal_label' | t }}</span>
+        <span class="sidecart__subtotal">{{ cart.total_price | money }}</span>
+      </div>
+      <p class="px-6 md:px-8 text-xs mt-0">{{ 'general.cart.shipping_label' | t }}</p>
+    </div>
+
+    <div class="px-6 md:px-8">
+      <button
+        type="submit"
+        name="checkout"
+        class="sidecart__checkout button-primary bg-gold text-white w-full flex justify-center items-center"
+      >
+        {{ 'general.cart.button_label' | t }}
+      </button>
+    </div>
+  </div>
+</side-cart>
+{% schema %}
+{
+  "name": "Slide in cart",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Shipping text",
+      "default": "<p>Get <b>free shipping</b> when you subscribe!</p>"
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_text",
+      "label": "Free shipping text",
+      "default": "Free shipping on us—don't worry, we got you covered!"
+    },
+    {
+      "type": "header",
+      "content": "Empty cart"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Empty cart title",
+      "default": "Empty Cart"
+    },
+    {
+      "type": "text",
+      "id": "empty_btn_text",
+      "label": "Empty cart button text",
+      "default": "start shopping"
+    },
+    {
+      "type": "url",
+      "id": "empty_btn_link",
+      "label": "Empty cart button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "empty_img",
+      "label": "Empty cart image"
+    },
+    {
+      "type": "text",
+      "id": "empty_product",
+      "label": "Empty cart products title",
+      "default": "One click away from healthier hair, skin, and nails"
+    }
+  ]
+}
+{% endschema %}

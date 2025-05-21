@@ -1,0 +1,44 @@
+{
+  "name": "theme-boiler",
+  "version": "1.1.0",
+  "description": "Boilerplate running on Tailwind",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Andy",
+  "license": "MIT",
+  "scripts": {
+    "vite": "vite build --watch",
+    "shopify": "shopify theme dev --store=quickstart-5f3da1d7.myshopify.com",
+    "shopify:serve": "shopify theme dev --store=quickstart-5f3da1d7.myshopify.com",
+    "start": "run-p -sr shopify:serve vite"
+  },
+  "dependencies": {
+    "@shopify/cli": "^3.50.0",
+    "@shopify/theme": "^3.50.0",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "alpinejs": "^3.14.9",
+    "cross-env": "^7.0.3",
+    "cssnano": "^5.0.6",
+    "flickity": "^2.3.0",
+    "lodash": "^4.17.21",
+    "swiper": "^11.0.4",
+    "tailwindcss": "^3.0.13",
+    "vanilla-lazyload": "^17.4.0",
+    "vite": "^4.4.9"
+  },
+  "devDependencies": {
+    "@shopify/prettier-plugin-liquid": "^1.0.5",
+    "@tailwindcss/line-clamp": "^0.3.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "autoprefixer": "^10.4.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.5",
+    "prettier": "^2.8.3",
+    "sass": "^1.27.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0"
+  }
+}

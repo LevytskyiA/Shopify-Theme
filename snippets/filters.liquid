@@ -1,0 +1,388 @@
+<div class='filters-wrap fixed hidden top-0 left-0 z-[99999] h-full w-full'>
+  <div class='absolute w-full h-full top-0 left-0 bg-white opacity-30 close-filters'></div>
+  <div class='filters-wrap-inner absolute top-0 right-0 bg-white h-full w-full sm:w-[430px] p-8'>
+    <button
+      class='absolute close-filters right-8 top-8 cursor-pointer p-0 border-0'
+      role='link'
+      tabindex='0'
+      aria-label='close filters'
+    >
+      <svg
+        class='pointer-events-none'
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+      >
+        <path d="M18 6L6 18" stroke="#151515" stroke-width="2" stroke-linecap="square"/>
+        <path d="M6 6L18 18" stroke="#151515" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    </button>
+    <div class='overflow-y-scroll overflow-x-hidden h-[95%]'>
+      <div class='uppercase text-dark md:hidden text-[20px] font-bold text-center'>Filter</div>
+      <div class='uppercase text-dark mt-[40px] text-[20px] font-bold'>sort by</div>
+      <div class='grid grid-cols-2 filter-sort pl-[6px] mt-[30px] gap-8'>
+        <input type='radio' id='featured' name='sorting' class='hidden' checked value='null'>
+        <label for='featured' class='cursor-pointer text-dark' tabindex='0'>Featured</label>
+        <input type='radio' id='best_selling' name='sorting' class='hidden' value='BEST_SELLING'>
+        <label for='best_selling' class='cursor-pointer text-dark' tabindex='0'>Best selling</label>
+        <input type='radio' id='price_ascending' name='sorting' class='hidden' value='PRICE'>
+        <label for='price_ascending' class='cursor-pointer text-dark' tabindex='0'>Price, low to high</label>
+        <input type='radio' id='price_descending' name='sorting' class='hidden' value='PRICE, reverse:true'>
+        <label for='price_descending' class='cursor-pointer text-dark' tabindex='0'>Price, high to low</label>
+      </div>
+
+      {%- for filter in collection.filters -%}
+        {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+        {% assign filter_handle = filter.label | downcase %}
+        {% case filter_handle %}
+          {% when 'price' %}
+            <div class='uppercase text-dark mt-[40px] text-[20px] font-bold'>shop by price</div>
+            <div class='range_container mt-[30px] p-[10px]'>
+              <div class='sliders_control'>
+                <input
+                  id='fromSlider'
+                  type='range'
+                  step='100'
+                  value='0'
+                  min='0'
+                  max='{{filter.range_max}}'
+                  title='min price range'
+                >
+                <input
+                  id='toSlider'
+                  type='range'
+                  step='100'
+                  value='{{filter.range_max}}'
+                  min='0'
+                  max='{{filter.range_max}}'
+                  data-max='{{filter.range_max}}'
+                  title='max price range'
+                >
+              </div>
+              <div class='form_control'>
+                <div class='form_control_container'>
+                  <input
+                    class='form_control_container__time__input text-dark bg-none border-0 w-[40px] p-0'
+                    disabled
+                    type='text'
+                    id='fromInput'
+                    value='{{0 | money}}'
+                    title='min price'
+                  >
+                </div>
+                <div class='form_control_container'>
+                  <input
+                    class='form_control_container__time__input text-dark bg-none border-0 w-[40px] p-0'
+                    disabled
+                    type='text'
+                    id='toInput'
+                    value='{{filter.range_max | money}}'
+                    data-init-value='{{filter.range_max | money}}'
+                    title='max price'
+                  >
+                </div>
+              </div>
+            </div>
+          {% when 'size' %}
+            {% unless collection.handle contains 'best-seller'
+              or collection.handle contains 'kids'
+              or collection.handle contains 'hats'
+              or collection.handle contains 'other-cool'
+            %}
+              <div id='sort-size' class='uppercase text-dark mt-[40px] text-[20px] font-bold'>shop by size</div>
+              <div class='flex space-x-2 flex-wrap -ml-2 filter-size mt-[30px]'>
+                {% for value in filter.values %}
+                  {% unless value.count == 0 or value.value contains 'oddler' or value.value contains 'outh' %}
+                    <input
+                      type='checkbox'
+                      name='{{ value.param_name }}'
+                      value='{{ value.value }}'
+                      id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      {% if value.active %}
+                        checked
+                      {% endif %}
+                      class='hidden'
+                      data-type='{{filter.label}}'
+                      data-key='variantOption'
+                    >
+                    <label
+                      for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      class='text-base mb-2 cursor-pointer text-dark border border-solid border-darker p-1 min-w-[66px] h-10 flex items-center justify-center'
+                      tabindex='0'
+                    >
+                      {{ value.label | escape }}
+                    </label>
+                  {% endunless %}
+                {% endfor %}
+              </div>
+            {% endunless %}
+
+          {% when 'more filters' %}
+            <div id='sort-color' class='uppercase text-dark mt-[40px] text-[20px] font-bold'>shop by color</div>
+            <div class='grid grid-cols-4 gap-4 mt-[30px] filter-color pb-[100px]'>
+              {% for value in filter.values %}
+                {% unless value.count == 0 %}
+                  {% if value.label contains 'color_' %}
+                    <input
+                      type='checkbox'
+                      name='{{ value.param_name }}'
+                      value='{{ value.value }}'
+                      id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      {% if value.active %}
+                        checked
+                      {% endif %}
+                      class='hidden'
+                      data-type='{{filter.label}}'
+                      data-key='tag'
+                    >
+                    <label
+                      for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      class='relative text-dark text-center cursor-pointer flex flex-col items-center'
+                      tabindex='0'
+                    >
+                      <div
+                        class='swatch relative m-auto mt-0 mb-4 !w-[32px] !h-[32px] !shadow-none rounded-full {{value.label | split: 'color_' | last | handleize}} !mr-0 ml-0'
+                        style='background: {{value.label | split: 'color_' | last | handleize}}'
+                      ></div>
+                      {{ value.label | split: 'color_' | last | escape }}
+                    </label>
+                  {% endif %}
+                {% endunless %}
+              {% endfor %}
+            </div>
+
+          {% when 'category' %}
+            <div class='uppercase text-dark mt-[40px] text-[20px] font-bold'>category</div>
+            <div class='grid grid-cols-2 filter-category pl-[6px] mt-[30px] gap-8'>
+              {% for value in filter.values %}
+                {% unless value.count == 0 %}
+                  <div>
+                    <input
+                      type='checkbox'
+                      name='{{ value.param_name }}'
+                      value='{{ value.value }}'
+                      id='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      {% if value.active %}
+                        checked
+                      {% endif %}
+                      class='!ring-offset-0 !ring-0 accent-black text-black mr-4'
+                      data-type='{{filter.label}}'
+                      data-key='productMetafield'
+                    >
+                    <label
+                      for='Filter-{{ filter.label | escape }}-{{ forloop.index }}'
+                      class='relative text-dark text-center cursor-pointer'
+                      tabindex='0'
+                    >
+                      {{ value.label | escape | capitalize }}
+                    </label>
+                  </div>
+                {% endunless %}
+              {% endfor %}
+            </div>
+
+          {% else %}
+
+        {% endcase %}
+      {%- endfor -%}
+    </div>
+
+    <div class='flex absolute bottom-8 w-full justify-center left-0 space-x-2 bg-white pt-8'>
+      <button class='reset-filters bg-white font-bold border border-solid border-light uppercase text-dark w-[41%] h-10 flex items-center justify-center'>
+        reset
+      </button>
+      <button class='apply-filters bg-dark font-bold text-white border border-solid border-light uppercase w-[41%] h-10 flex items-center justify-center'>
+        apply
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .overflow-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .overflow-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .filter-sort input + label:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: white;
+    margin-right: 20px;
+    box-shadow: 0px 0px 1px 5px white, 0px 0px 1px 6px black;
+    border-radius: 100px;
+  }
+  .filter-sort input:checked + label:before {
+    background: white;
+    box-shadow: 0px 0px 1px 5px black, 0px 0px 1px 6px white;
+  }
+  .filters-wrap-inner {
+    transform: translateX(100%);
+    transition: 0.5s;
+  }
+  .filters-wrap-inner.active {
+    transform: translateX(0);
+  }
+  .filter-size input:checked + label {
+    background: #151515;
+    color: white;
+  }
+  .filter-color input:checked + label .swatch:before {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 9px;
+    left: 9px;
+    height: 8px;
+    width: 13px;
+    border-left: 2px solid #000;
+    border-bottom: 2px solid #000;
+    rotate: -50deg;
+  }
+  .filter-color input:checked + label .swatch.black:before {
+    border-color: #fff;
+  }
+  .sliders_control {
+    position: relative;
+    min-height: 10px;
+  }
+
+  .form_control {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    color: #635a5a;
+    margin-top: 10px;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 28px;
+    height: 28px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 6px 13px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  input[type='range']::-moz-range-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 28px;
+    height: 28px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 6px 13px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  #toSlider::-webkit-slider-thumb {
+    margin-top: -2px;
+  }
+
+  input[type='range']::-webkit-slider-thumb:hover {
+    background: #f7f7f7;
+  }
+
+  input[type='number'] {
+    color: #8a8383;
+    width: 50px;
+    height: 30px;
+    font-size: 20px;
+    border: none;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    background-color: #c6c6c6;
+    pointer-events: none;
+  }
+
+  #fromSlider {
+    height: 0;
+    z-index: 1;
+  }
+</style>
+
+<script>
+  function controlFromSlider(fromSlider, toSlider, fromInput) {
+    const [from, to] = getParsed(fromSlider, toSlider)
+    fillSlider(fromSlider, toSlider, '#c6c6c6', '#151515', toSlider)
+    if (from > to) {
+      fromSlider.value = to
+      fromInput.value = '$' + to / 100 + '.00'
+    } else {
+      fromInput.value = '$' + from / 100 + '.00'
+    }
+  }
+
+  function controlToSlider(fromSlider, toSlider, toInput) {
+    const [from, to] = getParsed(fromSlider, toSlider)
+    fillSlider(fromSlider, toSlider, '#c6c6c6', '#151515', toSlider)
+    setToggleAccessible(toSlider)
+    if (from <= to) {
+      toSlider.value = to
+      toInput.value = '$' + to / 100 + '.00'
+    } else {
+      toInput.value = '$' + from / 100 + '.00'
+      toSlider.value = from
+    }
+  }
+
+  function getParsed(currentFrom, currentTo) {
+    const from = parseInt(currentFrom.value, 10)
+    const to = parseInt(currentTo.value, 10)
+    return [from, to]
+  }
+
+  function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
+    const rangeDistance = to.max - to.min
+    const fromPosition = from.value - to.min
+    const toPosition = to.value - to.min
+    controlSlider.style.background = `linear-gradient(
+        to right,
+        ${sliderColor} 0%,
+        ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+        ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+        ${rangeColor} ${(toPosition / rangeDistance) * 100}%, 
+        ${sliderColor} ${(toPosition / rangeDistance) * 100}%, 
+        ${sliderColor} 100%)`
+  }
+
+  function setToggleAccessible(currentTarget) {
+    const toSlider = document.querySelector('#toSlider')
+    if (Number(currentTarget.value) <= 0) {
+      toSlider.style.zIndex = 2
+    } else {
+      toSlider.style.zIndex = 0
+    }
+  }
+
+  const fromSlider = document.querySelector('#fromSlider')
+  const toSlider = document.querySelector('#toSlider')
+  const fromInput = document.querySelector('#fromInput')
+  const toInput = document.querySelector('#toInput')
+  fillSlider(fromSlider, toSlider, '#c6c6c6', '#151515', toSlider)
+  setToggleAccessible(toSlider)
+
+  fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput)
+  toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput)
+</script>

@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "text": "I would be happy to follow-up with a phone conversation with you.  If you would like for me call you, be sure and provide your phone number, but it is not required.",
+        "phone": "12345",
+        "email": "test@gmail.com",
+        "fb_link": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "form"
+  ]
+}

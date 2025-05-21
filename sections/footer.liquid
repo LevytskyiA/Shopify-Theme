@@ -1,0 +1,84 @@
+<!--
+  This example requires Tailwind CSS v2.0+
+
+  This example requires some changes to your config:
+
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+<footer class='bg-dark' aria-labelledby='footer-heading'>
+  <h2 id='footer-heading' class='sr-only'>Footer</h2>
+  <div class='max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8'>
+    <div class='xl:grid xl:grid-cols-3 xl:gap-8'>
+      <div class='grid grid-cols-1 gap-8 xl:col-span-2'>
+        <div class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8'>
+          {% for link in linklists[section.settings.menu].links %}
+            {% if link.links != blank %}
+              <div class='mt-12 md:mt-0'>
+                <h3 class='text-sm font-semibold text-gold tracking-wider uppercase font-display'>{{ link.title }}</h3>
+                <ul role='list' class='mt-4 space-y-4'>
+                  {% for childlink in link.links %}
+                    <li>
+                      <a href='{{ childlink.url }}' class='text-base text-white hover:text-gold'>
+                        {{ childlink.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% if section.settings.newsletter_enable == true %}
+        <div class='mt-8 xl:mt-0'>
+          <h3 class='text-sm font-semibold text-gold tracking-wider uppercase font-display'>
+            Subscribe to our newsletter
+          </h3>
+          <p class='mt-4 text-base text-gray-300'>
+            The latest news, articles, and resources, sent to your inbox weekly.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "t:sections.footer.name",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__1.content",
+      "info": "t:sections.footer.settings.header__1.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "newsletter_enable",
+      "default": true,
+      "label": "t:sections.footer.settings.newsletter_enable.label"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "default": "Subscribe to our emails",
+      "label": "t:sections.footer.settings.newsletter_heading.label"
+    }
+  ]
+}
+{% endschema %}
