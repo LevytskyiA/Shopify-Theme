@@ -46,8 +46,9 @@ class ColorSwatches extends HTMLElement {
 
     if (!featuredImage || !secondaryImage) return;
 
-    featuredImage.style.transition = 'opacity 0.3s ease';
-    secondaryImage.style.transition = 'opacity 0.3s ease';
+    [featuredImage, secondaryImage].forEach(img => {
+      img.style.transition = 'opacity 0.3s ease';
+    });
 
     const onFadeOut = () => {
       featuredImage.removeEventListener('transitionend', onFadeOut);
@@ -66,8 +67,9 @@ class ColorSwatches extends HTMLElement {
     };
 
     featuredImage.addEventListener('transitionend', onFadeOut);
-    featuredImage.style.opacity = 0;
-    secondaryImage.style.opacity = 0;
+    [featuredImage, secondaryImage].forEach(img => {
+      img.style.opacity = 0;
+    });
   }
 }
 
