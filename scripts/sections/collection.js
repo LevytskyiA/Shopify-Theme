@@ -18,6 +18,7 @@ class Collection extends HTMLElement {
     this.toggleFilters()
     this.filtering()
     this.sorting()
+    console.log('test');
   }
 
   toggleFilters() {

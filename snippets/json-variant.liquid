@@ -1,0 +1,27 @@
+<script type="application/ld+json">
+    {%- for variant in product.variants -%}
+      {
+        'available': {{variant.available }},
+        'compare_at_price': {% unless variant.compare_at_price == blank %}{{ variant.compare_at_price }}{% else %}null{% endunless %},
+        'featured_image': {% unless variant.featured_image == blank %}'{{ variant.featured_image | image_url }}'{% else %}null{% endunless %},
+        'id': {{ variant.id }},
+        'inventory_management': '{{ variant.inventory_management }}',
+        'name': '{{ variant.name }}',
+        'currency': '{{ cart.currency.iso_code }}',
+        'symbol': '{{ cart.currency.symbol }}',
+        'options': [
+        {% for option in variant.options -%}
+          '{{ option | replace: '"', '/quote/' | replace: "'", '/apos/'  }}'{% unless forloop.last == true%},{% endunless %}
+        {% endfor %}
+        ],
+        'price': {{ variant.price }},
+        'public_title': '{{ variant.title | replace: '"', '/quote/' | replace: "'", '/apos/' }}',
+
+        'sku': '{{ variant.sku }}',
+        'taxable': {{variant.taxable}},
+        'title': '{{variant.title | replace: '"', '/quote/' | replace: "'", '/apos/' }}',
+        'secondary_image': {% unless variant.metafields.custom.secondary_variant_image == blank %}{{ variant.metafields.custom.secondary_variant_image.value | json | escape }}{% else %}null{% endunless %},
+        'weight': {{ variant.weight }}
+      }{% unless forloop.last == true%},{% endunless %}
+  {% endfor %}
+</script>

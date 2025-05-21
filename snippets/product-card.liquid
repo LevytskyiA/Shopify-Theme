@@ -114,13 +114,31 @@
             </h2>
           </div>
         {%- endif -%}
+
+        <quantity-input class="hidden">
+          <input
+            class="quantity__input border-0 w-20"
+            type="number"
+            name="quantity"
+            id="Quantity-{{ section.id }}"
+            min="1"
+            value="1"
+            form="{{ product_form_id }}"
+          >
+        </quantity-input>
+        <buy-button class="hidden flex mt-6" id="{{ product_card_product.first_available_variant.id }}">
+          <button class='product__cta font-bold button-primary block uppercase text-base w-full'>
+            Add To Cart
+          </button>
+        </buy-button>
       </div>
     </div>
   </a>
 
   <div class='card-information'>
     <div class='card-information__wrapper grid gap-1.5'>
-      {% render 'variant-button', product: product_card_product %}
+      {% render 'swatch', product: product_card_product %}
+
         <div class="max-w-[246px] gap-8 flex flex-col">
           {%- if show_vendor -%}
             <span class='hidden'>{{ 'accessibility.vendor' | t }}</span>

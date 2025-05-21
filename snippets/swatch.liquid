@@ -1,0 +1,42 @@
+{% assign color_option_index = -1 %}
+
+<color-swatches>
+  {%- for option in product.options_with_values -%}
+    {%- if option.name == 'Color' -%}
+      {%- assign color_option_index = forloop.index0 -%}
+      <fieldset class="flex flex-wrap gap-5">
+        {%- assign seen_colors = '' -%}
+        {%- for variant in product.variants -%}
+          {%- assign color = variant.options[color_option_index] -%}
+          {%- unless seen_colors contains color -%}
+            {%- assign seen_colors = seen_colors | append: color | append: ',' -%}
+            <li>
+              <input
+                class="product__variant--button hidden peer"
+                name="color-{{ product.id }}"
+                id="option-{{ color }}-{{ variant.id }}"
+                type="radio"
+                value="{{ color }}"
+                {% if variant == product.selected_or_first_available_variant and
+                  variant.options[color_option_index] == color
+                %}
+                  checked
+                {% endif %}
+              />
+
+              <label
+                for="option-{{ color }}-{{ variant.id }}"
+                class="swatch peer-checked:border-[#0A4874] peer-checked:border"
+                style="--background-color: {{ color | downcase }};"
+              >
+                <span class="hidden">{{ color }}</span>
+              </label>
+            </li>
+          {%- endunless -%}
+        {%- endfor -%}
+      </fieldset>
+    {%- endif -%}
+  {%- endfor -%}
+</color-swatches>
+
+{% render 'json-variant', product: product %}
