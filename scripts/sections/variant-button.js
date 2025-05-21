@@ -30,6 +30,7 @@ class VariantButton extends HTMLElement {
     this.productInfo = parseAttribute(this.getAttribute("js-product"));
     // Get the variants
     this.variants = parseAttribute(this.getAttribute("js-variants"));
+    this.cta = document.querySelector('.product__cta');
 
     // Get the first available variant, this is required to determine which option is selected on default load
     this.firstAvailableVariant = parseAttribute(
@@ -156,9 +157,9 @@ class VariantButton extends HTMLElement {
     }
 
     html += `</div>`;
-    if (this.productInfo.available == false) {
-      document.querySelector(".product__cta").disabled = true;
-      document.querySelector(".product__cta").innerHTML = `Sold Out`;
+    if (this.productInfo.available == false && this.cta) {
+      this.cta.disabled = true;
+      this.cta.innerHTML = `Sold Out`;
     }
 
     this.insertAdjacentHTML("beforeend", html);
@@ -321,27 +322,22 @@ class VariantButton extends HTMLElement {
 
     //bug function, if current variant doesn't exist, but both options are selected then rerun
     if (!this.currentVariant) {
-      document.querySelector(
-        ".product__cta"
-      ).innerHTML = `<span class="text-base font-medium font-poppinsMedium">Select Option
-    </span>`;
-      document.querySelector(".product__cta").classList.add("cursor-");
-      document.querySelector(".product__cta").disabled = true;
+      if (this.cta) {
+        this.cta.innerHTML = `<span class="text-base font-medium font-poppinsMedium">Select Option</span>`;
+        this.cta.classList.add("cursor-");
+        this.cta.disabled = true;
+      }
     }
 
     if (this.currentVariant) {
-      if (this.currentVariant.available == false) {
-        document.querySelector(".product__cta").disabled = true;
-        document.querySelector(
-          ".product__cta"
-        ).innerHTML = `<span class="text-base font-medium">Sold Out
+      if (this.currentVariant.available === false && this.cta) {
+        this.cta.disabled = true;
+        this.cta.innerHTML = `<span class="text-base font-medium">Sold Out
       </span>`;
-      } else {
+      } else if (this.cta) {
         //update price on variant change
-        document.querySelector(".product__cta").disabled = false;
-        document.querySelector(
-          ".product__cta"
-        ).innerHTML = `<span class="text-base font-medium">Add to cart
+        this.cta.disabled = false;
+        this.cta.innerHTML = `<span class="text-base font-medium">Add to cart
     </span>`;
 
         document.querySelector("buy-button").id = this.currentVariant.id;
@@ -368,32 +364,41 @@ class VariantButton extends HTMLElement {
         }
 
         if (this.currentVariant.featured_image != null) {
-          const featuredImage = document.querySelector('[js-product-card="featured"]');
-          const secondaryImage = document.querySelector('[js-product-card="secondary"]');
-          featuredImage.style.transition = 'opacity 0.3s ease';
-          secondaryImage.style.transition = 'opacity 0.3s ease';
-
-          const onFadeOut = () => {
-            featuredImage.removeEventListener('transitionend', onFadeOut);
-            featuredImage.src = this.currentVariant.featured_image;
-            featuredImage.setAttribute('srcset', '');
-            featuredImage.setAttribute('data-media-id', this.currentVariant.featured_image.id);
-
-            if (this.currentVariant.secondary_image) {
-              secondaryImage.src = this.currentVariant.secondary_image;
-              secondaryImage.setAttribute('srcset', '');
-              secondaryImage.setAttribute('data-media-id', this.currentVariant.secondary_image.id);
-            }
-            featuredImage.style.opacity = 1;
-            secondaryImage.style.opacity = 1;
-          };
-
-          featuredImage.addEventListener('transitionend', onFadeOut);
-          featuredImage.style.opacity = 0;
-          secondaryImage.style.opacity = 0;
+          this.updateImage(this.currentVariant);
         }
       }
     }
+  }
+
+  /**
+   * Update product card image depends on selected swatch
+   * @param {Object} currentVariant - Variant object.
+   */
+  updateImage(currentVariant) {
+    const card = this.closest('[js-product-card="card"]');
+    const featuredImage = card.querySelector('[js-product-card="featured"]');
+    const secondaryImage = card.querySelector('[js-product-card="secondary"]');
+    featuredImage.style.transition = 'opacity 0.3s ease';
+    secondaryImage.style.transition = 'opacity 0.3s ease';
+
+    const onFadeOut = () => {
+      featuredImage.removeEventListener('transitionend', onFadeOut);
+      featuredImage.src = currentVariant.featured_image;
+      featuredImage.setAttribute('srcset', '');
+      featuredImage.setAttribute('data-media-id', currentVariant.featured_image.id);
+
+      if (currentVariant.secondary_image) {
+        secondaryImage.src = currentVariant.secondary_image;
+        secondaryImage.setAttribute('srcset', '');
+        secondaryImage.setAttribute('data-media-id', currentVariant.secondary_image.id);
+      }
+      featuredImage.style.opacity = 1;
+      secondaryImage.style.opacity = 1;
+    };
+
+    featuredImage.addEventListener('transitionend', onFadeOut);
+    featuredImage.style.opacity = 0;
+    secondaryImage.style.opacity = 0;
   }
 
   /**

@@ -66,7 +66,11 @@
     </div>
     <div class='price__regular'>
       <span class='hidden hidden--inline'>{{ 'products.product.price.regular_price' | t }}</span>
-      <span class='product__main-price price-item price-item--regular text-xs text-primaryRed font-normal'>
+      <span
+        class='product__main-price price-item price-item--regular text-xs font-normal
+        {%- if compare_at_price > price %} text-primaryRed{% else %} text-primary{% endif -%}
+        '
+      >
         {{ money_price }}
       </span>
     </div>

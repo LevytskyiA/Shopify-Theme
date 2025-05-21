@@ -15,8 +15,11 @@
 {% endcomment %}
 {% assign secondary_image = product_card_product.selected_or_first_available_variant.metafields.custom.secondary_variant_image %}
 
-<div class='card-wrapper grid gap-1.5'>
-  <a href="{{ product_card_product.url }}">
+<div
+  class='card-wrapper grid gap-1.5 h-fit'
+  js-product-card="card"
+>
+  <a href="{{ product_card_product.url }}" class="h-fit">
     <div
       class='
         card card--product
@@ -111,23 +114,6 @@
             </h2>
           </div>
         {%- endif -%}
-
-        <quantity-input class="hidden">
-          <input
-            class="quantity__input border-0 w-20"
-            type="number"
-            name="quantity"
-            id="Quantity-{{ section.id }}"
-            min="1"
-            value="1"
-            form="{{ product_form_id }}"
-          >
-        </quantity-input>
-        <buy-button class="hidden flex mt-6" id="{{product.first_available_variant.id}}">
-          <button class='product__cta font-bold button-primary block uppercase text-base w-full'>
-            Add To Cart
-          </button>
-        </buy-button>
       </div>
     </div>
   </a>
