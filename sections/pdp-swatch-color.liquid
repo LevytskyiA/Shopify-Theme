@@ -1,0 +1,98 @@
+<style>
+    .swatch {
+      align-items: center;
+      justify-content: center;
+      border-radius: 100px;
+      cursor: pointer;
+      display: flex;
+      height: 24px;
+      width: 24px;
+      position: relative;
+    }
+    .swatch::after {
+      background-color: var(--background-color);
+      content: '';
+      border-radius: 100px;
+      cursor: pointer;
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      position: relative;
+    }
+    .swatch:hover {
+      border: 1px solid #0A4874;
+    }
+
+    input:checked + label.swatch {
+      border: 1px solid #0A4874;
+    }
+
+    input[type="radio"] + .button-swatch {
+      border: 1px solid #E6E6E6;
+      background-color: white;
+      color: black;
+    }
+
+    .button-swatch {
+      position: relative;
+      display: block;
+      position: relative;
+      padding: 12px 24px;
+      min-width: 85px;
+      text-align: center;
+    }
+
+    .button-swatch.sold-out {
+      color: #E6E6E6 !important;
+    }
+
+    .button-swatch.sold-out::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 113%;
+        height: 2px;
+        background: #E6E6E6;
+        transform: rotate(333deg);
+        transform-origin: 0 0;
+
+    }
+
+    .swatch-White {
+      border: 1px solid #E6E6E6;
+    }
+
+  {% for block in section.blocks %}
+      .swatch-{{block.settings.title}} {
+          background: {{ block.settings.color }};
+      }
+
+  {% endfor %}
+</style>
+
+{% schema %}
+{
+  "name": "PDP swatch color",
+  "blocks": [
+    {
+      "name": "swatch",
+      "type": "color",
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Swatch Name",
+          "info": "Swatch name must match the variant color name."
+        },
+        {
+          "id": "color",
+          "type": "color",
+          "label": "Color",
+          "info": "Swatch color"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

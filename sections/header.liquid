@@ -1,0 +1,567 @@
+{% assign is_transparent = false %}
+{% if section.settings.homepage and template.name == 'index' %}
+  {% assign is_transparent = true %}
+{% endif %}
+{% if section.settings.plp and template.name == 'collection' %}
+  {% assign is_transparent = true %}
+{% endif %}
+{% if section.settings.pdp and template.name == 'product' %}
+  {% assign is_transparent = true %}
+{% endif %}
+{% if section.settings.blog and template.name == 'blog' %}
+  {% assign is_transparent = true %}
+{% endif %}
+{% if section.settings.article and template.name == 'article' %}
+  {% assign is_transparent = true %}
+{% endif %}
+{% if section.settings.page and template.name == 'page' %}
+  {% assign is_transparent = true %}
+{% endif %}
+
+{% for block in section.blocks %}
+  {% if canonical_url contains block.settings.page %}
+    {% assign is_transparent = true %}
+  {% endif %}
+{% endfor %}
+<div class='bg-white header-wrap main-header {% if is_transparent %} !bg-[transparent] invert{% endif %}'>
+  <!--
+    Mobile menu
+
+    Off-canvas menu for mobile, show/hide based on off-canvas menu state.
+  -->
+  <div class='relative z-40 lg:hidden' role='dialog' aria-modal='true'>
+    <!--
+      Off-canvas menu backdrop, show/hide based on off-canvas menu state.
+
+      Entering: "transition-opacity ease-linear duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "transition-opacity ease-linear duration-300"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+    <div id='mobile-menu-overlay' class='fixed inset-0 bg-black bg-opacity-25 hidden'></div>
+
+    <mobile-menu class='fixed flex w-full -left-full h-[100vh] z-[9999999]'>
+      <!--
+        Off-canvas menu, show/hide based on off-canvas menu state.
+
+        Entering: "transition ease-in-out duration-300 transform"
+          From: "-translate-x-full"
+          To: "translate-x-0"
+        Leaving: "transition ease-in-out duration-300 transform"
+          From: "translate-x-0"
+          To: "-translate-x-full"
+      -->
+      <div class='mobile-menu-inner hidden relative max-w-[100%] w-full bg-white h-full {% if is_transparent %} invert {% endif %} shadow-xl flex flex-col overflow-y-auto'>
+        <div class='px-4 pt-5 pb-5 flex justify-end'>
+          <span class='p-2 inline-flex items-center justify-center'>
+            <span class='sr-only'>Close menu</span>
+            <!-- Heroicon name: outline/x -->
+            <span id='mobile-menu-button-close'>
+              <svg
+                class='h-6 w-6 pointer-events-none'
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke-width='2'
+                stroke='#000'
+                aria-hidden='true'
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </span>
+          </span>
+        </div>
+
+        <!-- Links -->
+        <div class='mt-2'>
+          <div
+            id='tabs-1-panel-1'
+            class='px-6 md:px-[32px] sm:px-6 pt-4 pb-6 space-y-12'
+            aria-labelledby='tabs-1-tab-1'
+            role='tabpanel'
+            tabindex='0'
+          >
+            <div class='grid grid-cols-1 items-start gap-y-10 gap-x-6'>
+              {% for link in linklists[section.settings.mobile_menu].links %}
+                {% if link.links != blank %}
+                  <div class='grid grid-cols-1 gap-y-10 gap-x-6'>
+                    <div>
+                      <p
+                        id='mobile-featured-heading-0'
+                        class='text-lg font-bold text-dark uppercase mb-6 font-display h4'
+                      >
+                        {{ link.title }}
+                      </p>
+                      <ul role='list' aria-labelledby='mobile-featured-heading-0' class='mt-6 space-y-6 columns-2'>
+                        {% for childlink in link.links %}
+                          {% assign childlink_handle = childlink.title | handleize %}
+                          <li class='flex mb-3'>
+                            <a
+                              href='{% if childlink.url == "/account/login" %}{% if customer %}/account{% else %}/account/login{% endif %}{% else %}{{ childlink.url }}{% endif %}'
+                              class='text-dark hover:text-gold font-normal text-base'
+                            >
+                              {{- childlink.title -}}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class='px-6 md:px-[32px] sm:px-6 pt-4 pb-6 space-y-12 columns-2'>
+          {% for link in linklists[section.settings.mobile_footer_menu].links %}
+            {% if link.links != blank %}
+              <div>
+                <h3 class='h4 text-dark hover:text-gold uppercase mb-[20px] font-bold'>{{ link.title }}</h3>
+                <ul role='list' class='mt-4 space-y-4'>
+                  {% for childlink in link.links %}
+                    <li>
+                      <a
+                        href='{{ childlink.url }}'
+                        class='font-normal text-base text-dark hover:text-gold capitalize mb-[20px] hover:underline underline-offset-2 duration-500'
+                      >
+                        {{ childlink.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class='flex flex-col justify-center items-center mt-[80px]'>
+          <ul role='list' class='mt-6 mb-1 flex items-center gap-[16px]'>
+            {% for link in linklists[section.settings.mobile_menu_bottom].links %}
+              <li>
+                <a href='{{ link.url }}' class='text-dark hover:text-gold font-normal text-base'>
+                  {{- link.title -}}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          <p class='text-dark hover:text-black font-normal text-base mb-[40px]'>
+            &copy; {{ 'now' | date: '%Y' }}
+          </p>
+        </div>
+      </div>
+    </mobile-menu>
+  </div>
+
+  <header class='relative'>
+    <nav aria-label='Top'>
+      <!-- Top navigation -->
+
+      <!-- Secondary navigation -->
+      <main-header>
+        <div class='max-w-8xl mx-auto px-4 sm:px-6 lg:px-16 py-4 border-b border-t-0 border-x-0 border-solid border-gold'>
+          <div class='border-b border-gray-200'>
+            <div class='h-16 flex items-center justify-between'>
+              <!-- Logo (lg+) -->
+              <div class='hidden lg:flex lg:items-center hover:opacity-50 logo-block'>
+                <a href='{{ routes.root_url }}' class='h-auto w-auto'>
+                  <span class='sr-only'>Logo</span>
+
+                  {%- if section.settings.logo != blank -%}
+                    {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
+                    {%- assign logo_height = section.settings.logo_width
+                      | divided_by: section.settings.logo.aspect_ratio
+                    -%}
+                    {{
+                      section.settings.logo
+                      | image_url: width: section.settings.width
+                      | image_tag:
+                        class: 'h-12 w-auto',
+                        widths: '50, 100, 150, 200, 250, 300, 400, 500',
+                        height: logo_height,
+                        width: section.settings.logo_width,
+                        alt: logo_alt
+                    }}
+                  {%- else -%}
+                    <span class='h2'>{{ shop.name }}</span>
+                  {%- endif -%}
+                </a>
+              </div>
+
+              <div class='hidden h-full lg:flex'>
+                <!-- Mega menus -->
+                <div class='ml-8'>
+                  <div class='h-full flex justify-center space-x-6'>
+                    {% for link in linklists[section.settings.menu].links %}
+                      {% if link.links != blank %}
+                        <div class='flex'>
+                          <div class='relative flex item-1'>
+                            <!--
+                              Item active: "border-indigo-600 text-indigo-600", Item inactive: "border-transparent text-gray-700 hover:text-gray-800"
+                            -->
+                            <a
+                              id='meganav-heading'
+                              href='{{link.url}}'
+                              class='font-display border-transparent tracking-normal p-0 uppercase font-bold  text-black hover:text-gold hover:border-b-extraLight relative z-10 flex items-center transition-colors ease-out duration-200 h8 border-b-[1px] -mb-px pt-px'
+                              aria-expanded='true'
+                              meganav_heading_index='{{forloop.index}}'
+                            >
+                              {{ link.title -}}
+                              {%- render 'icon-caret' %}
+                            </a>
+                          </div>
+
+                          <div
+                            class='absolute top-full inset-x-0 text-sm text-white hidden'
+                            meganav_index='{{forloop.index}}'
+                          >
+                            <div class='absolute inset-0 top-1/2 bg-dark shadow' aria-hidden='true'></div>
+
+                            <div class='relative bg-white'>
+                              <div class='block max-w-medium mx-auto px-8'>
+                                <div class='grid grid-cols-1 gap-y-10 gap-x-8 py-16'>
+                                  <div class='col-start-2 grid grid-cols-2 gap-x-8'>
+                                    {% if section.settings.meganav_image_one != blank %}
+                                      <div class='group relative text-base sm:text-sm'>
+                                        <div class='aspect-w-1 aspect-h-1 rounded-lg bg-gray-100 overflow-hidden group-hover:opacity-75'>
+                                          {%
+                                            render 'responsive-image' with
+                                            image: section.settings.meganav_image_one,
+                                            image_class: 'object-center object-cover',
+                                            image_width: '500x'
+                                          %}
+                                        </div>
+                                        <a
+                                          href='{{ section.settings.meganav_image_one_button_link }}'
+                                          class='mt-6 block font-medium text-gray-900'
+                                        >
+                                          <span class='absolute z-10 inset-0' aria-hidden='true'></span>
+                                          {{ section.settings.meganav_image_one_button_label }}
+                                        </a>
+                                        <p aria-hidden='true' class='mt-1'>Shop now</p>
+                                      </div>
+                                    {% endif %}
+
+                                    {% if section.settings.meganav_image_two != blank %}
+                                      <div class='group relative text-base sm:text-sm'>
+                                        <div class='aspect-w-1 aspect-h-1 rounded-lg bg-gray-100 overflow-hidden group-hover:opacity-75'>
+                                          {%
+                                            render 'responsive-image' with
+                                            image: section.settings.meganav_image_two,
+                                            image_class: 'object-center object-cover',
+                                            image_width: '500x'
+                                          %}
+                                        </div>
+                                        <a
+                                          href='{{ section.settings.meganav_image_two_button_link }}'
+                                          class='mt-6 block font-medium text-gray-900'
+                                        >
+                                          <span class='absolute z-10 inset-0' aria-hidden='true'></span>
+                                          {{ section.settings.meganav_image_two_button_label }}
+                                        </a>
+                                        <p aria-hidden='true' class='mt-1'>Shop now</p>
+                                      </div>
+                                    {% endif %}
+                                  </div>
+                                  <div class='row-start-1 grid grid-cols-4 gap-y-10 gap-x-8 text-sm'>
+                                    {% for childlink in link.links %}
+                                      <div>
+                                        <a
+                                          href='{{childlink.url}}'
+                                          class='font-bold text-black hover:text-gold uppercase font-display'
+                                        >
+                                          {{- childlink.title -}}
+                                        </a>
+                                        {% if childlink.links != blank %}
+                                          <ul
+                                            role='list'
+                                            aria-labelledby='Clothing-heading'
+                                            class='mt-6 space-y-6 sm:mt-4 sm:space-y-4'
+                                          >
+                                            {% for grandchildlink in childlink.links %}
+                                              <li class='flex'>
+                                                <a
+                                                  href='{{ grandchildlink.url }}'
+                                                  class='text-black hover:text-gold'
+                                                >
+                                                  {{- grandchildlink.title -}}
+                                                </a>
+                                              </li>
+                                            {% endfor %}
+                                          </ul>
+                                        {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% else %}
+                        <a
+                          href='{{ link.url }}'
+                          class='mt-[2.5px] flex items-center uppercase h8 font-bold text-black hover:text-gold hover:border-b-extraLight font-display'
+                        >
+                          {{- link.title -}}
+                        </a>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mobile menu and search (lg-) -->
+              <div class='flex items-center lg:hidden'>
+                <!-- Mobile menu toggle, controls the 'mobileMenuOpen' state. -->
+                <span
+                  id='mobile-menu-button'
+                  type='button'
+                  class='-ml-2 p-2'
+                >
+                  <span class='sr-only'>Open menu</span>
+                  <!-- Heroicon name: outline/menu -->
+                  <svg
+                    class='h-6 w-6'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke-width='2'
+                    stroke='#151515'
+                    aria-hidden='true'
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </span>
+              </div>
+
+              <!-- Logo (lg-) -->
+              <a
+                href='{{ routes.root_url }}'
+                class='lg:hidden h-auto absolute left-1/2 transform -translate-x-1/2 w-auto'
+              >
+                <span class='sr-only'>Logo</span>
+
+                {%- if section.settings.logo != blank -%}
+                  {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
+                  {%- assign logo_height = section.settings.logo_width
+                    | divided_by: section.settings.logo.aspect_ratio
+                  -%}
+                  {{
+                    section.settings.logo
+                    | image_url: width: section.settings.width
+                    | image_tag:
+                      class: 'h-12 w-auto',
+                      widths: '50, 100, 150, 200, 250, 300, 400, 500',
+                      height: logo_height,
+                      width: section.settings.logo_width,
+                      alt: logo_alt
+                  }}
+                {%- else -%}
+                  <span class='h2'>{{ shop.name }}</span>
+                {%- endif -%}
+              </a>
+
+              <div class='flex items-center justify-end'>
+                <div class='flex items-center'>
+                  <div class='flex gap-[8px]'>
+                    <a
+                      href='/account'
+                      class='group items-center hidden lg:flex text-dark hover:text-gold p-2'
+                    >
+                      <svg
+                        class='hover:opacity-50 logo-block'
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <circle cx="12" cy="7" r="4" stroke="#151515" stroke-width="2"/>
+                        <rect x="4" y="15" width="16" height="6" stroke="#151515" stroke-width="2"/>
+                      </svg>
+                    </a>
+
+                    <span
+                      class='group flex items-center relative m-2 open-sidecart cursor-pointer'
+                      id='cart-icon-bubble'
+                    >
+                      <svg
+                        class='hover:opacity-50 logo-block pointer-events-none'
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <rect {% unless cart.item_count == 0 %}fill="#151515"{% endunless %}
+                          x="4" y="8" width="16" height="14" stroke="#151515" stroke-width="2"/>
+                        <path d="M9 11V5C9 3.34315 10.3431 2 12 2C13.6569 2 15 3.34315 15 5V11" stroke="#151515" stroke-width="2"/>
+                      </svg>
+
+                      <span
+                        id='cart-count'
+                        class=' w-4 h-4 flex items-center justify-center pointer-events-none rounded-full bg-gold cart-count text-sm font-medium text-black absolute bottom-[2.5px] left-[9.75px]'
+                      >
+                        {{- cart.item_count -}}
+                      </span>
+                      <span class='sr-only'>items in cart, view bag</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main-header>
+    </nav>
+  </header>
+</div>
+
+{% comment %}
+  <script src='{{ 'cart-notification.js' | asset_url }}' defer='defer'></script>
+
+  {%- render 'cart-notification', color_scheme: section.settings.color_scheme -%}
+{% endcomment %}
+<style>
+  .logo-block,
+  mobile-menu,
+  #mobile-menu-overlay {
+    transition: 0.5s;
+  }
+</style>
+
+<script>
+  class Header extends HTMLElement {
+    constructor() {
+      super()
+    }
+
+    connectedCallback() {
+      let self = this
+
+      ;['mouseover', 'keydown'].forEach(function (evt) {
+        self.addEventListener(evt, function (e) {
+          var targetName = e.target.id
+          var indexValue = e.target.getAttribute('meganav_heading_index')
+          if (targetName) {
+            self.querySelectorAll('[meganav_index]').forEach((element) => {
+              if (element.getAttribute('meganav_index') != indexValue) {
+                element.style.display = 'none'
+              } else {
+                element.style.display = 'block'
+                document.querySelector('.main-header').classList.add('active')
+              }
+            })
+          }
+        })
+      })
+
+      this.addEventListener('mouseleave', (e) => {
+        this.querySelectorAll('[meganav_index]').forEach((element) => {
+          element.style.display = 'none'
+          document.querySelector('.main-header').classList.remove('active')
+        })
+      })
+    }
+  }
+
+  customElements.define('main-header', Header)
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "class": "absolute w-full",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.header.settings.logo.label"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 110,
+      "step": 1,
+      "default": 100,
+      "unit": "t:sections.header.settings.logo_width.unit",
+      "label": "t:sections.header.settings.logo_width.label"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_menu",
+      "default": "main-menu",
+      "label": "Mobile menu"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_footer_menu",
+      "default": "footer",
+      "label": "Footer menu in mobile menu"
+    },
+
+    {
+      "type": "link_list",
+      "id": "mobile_menu_bottom",
+      "label": "Mobile menu bottom"
+    },
+    {
+      "type": "header",
+      "content": "Select pages with transparent background nav"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage",
+      "label": "Homepage"
+    },
+    {
+      "type": "checkbox",
+      "id": "pdp",
+      "label": "PDP"
+    },
+    {
+      "type": "checkbox",
+      "id": "plp",
+      "label": "PLP"
+    },
+    {
+      "type": "checkbox",
+      "id": "page",
+      "label": "Custom pages"
+    },
+    {
+      "type": "checkbox",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "article",
+      "label": "Article"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "transparent header",
+      "type": "transparent",
+      "settings": [
+        {
+          "type": "url",
+          "id": "page",
+          "label": "Select page",
+          "info": "Select page where header nav should be with transparent background"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

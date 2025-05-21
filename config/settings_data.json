@@ -1,0 +1,156 @@
+{
+  "current": {
+    "colors_solid_button_labels": "#FFFFFF",
+    "colors_accent_1": "#121212",
+    "colors_accent_2": "#334FB4",
+    "colors_text": "#121212",
+    "colors_outline_button_labels": "#121212",
+    "colors_background_1": "#FFFFFF",
+    "colors_background_2": "#F3F3F3",
+    "type_header_font": "assistant_n4",
+    "type_body_font": "assistant_n4",
+    "currency_code_enabled": false,
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "blocks": {
+          "2dbf561b-9526-4dd8-a635-76efc20ae275": {
+            "type": "announcement",
+            "settings": {
+              "text": "Announcement"
+            }
+          }
+        },
+        "block_order": [
+          "2dbf561b-9526-4dd8-a635-76efc20ae275"
+        ],
+        "settings": {
+          "bg_color": "#cca856",
+          "text_color": "#ffffff"
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo": "shopify:\/\/shop_images\/1625157238061.jpg",
+          "logo_width": 110,
+          "menu": "main-menu",
+          "mobile_menu": "main-menu",
+          "mobile_footer_menu": "footer",
+          "mobile_menu_bottom": "",
+          "homepage": false,
+          "pdp": false,
+          "plp": false,
+          "page": false,
+          "blog": false,
+          "article": false
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "menu": "footer",
+          "newsletter_enable": true,
+          "newsletter_heading": "Subscribe to our emails"
+        }
+      },
+      "sidecart": {
+        "type": "sidecart",
+        "settings": {
+          "shipping_text": "<p>Get <b>free shipping<\/b> when you subscribe!<\/p>",
+          "free_shipping_text": "Free shipping on us—don't worry, we got you covered!",
+          "empty_title": "Empty Cart",
+          "empty_btn_text": "start shopping",
+          "empty_btn_link": "",
+          "empty_product": "One click away from healthier hair, skin, and nails"
+        }
+      },
+      "pdp-swatch-color": {
+        "type": "pdp-swatch-color",
+        "blocks": {
+          "802e3960-f075-4eaa-86ad-4a2a76cbb2a1": {
+            "type": "color",
+            "settings": {
+              "title": "Red",
+              "color": "#ff0000"
+            }
+          },
+          "04c994fe-c761-4c42-a4c4-c9919545f0b7": {
+            "type": "color",
+            "settings": {
+              "title": "Black",
+              "color": "#000000"
+            }
+          }
+        },
+        "block_order": [
+          "802e3960-f075-4eaa-86ad-4a2a76cbb2a1",
+          "04c994fe-c761-4c42-a4c4-c9919545f0b7"
+        ],
+        "settings": {
+        }
+      }
+    },
+    "content_for_index": [
+
+    ],
+    "blocks": {
+      "12601257459161342390": {
+        "type": "shopify:\/\/apps\/giftship\/blocks\/giftship\/26bd5756-d344-471d-baf8-ba6267b82da9",
+        "disabled": false,
+        "settings": {
+        }
+      }
+    }
+  },
+  "presets": {
+    "Default": {
+      "colors_solid_button_labels": "#FFFFFF",
+      "colors_accent_1": "#121212",
+      "colors_accent_2": "#334FB4",
+      "colors_text": "#121212",
+      "colors_outline_button_labels": "#121212",
+      "colors_background_1": "#FFFFFF",
+      "colors_background_2": "#F3F3F3",
+      "type_header_font": "assistant_n4",
+      "type_body_font": "assistant_n4",
+      "sections": {
+        "announcement-bar": {
+          "type": "announcement-bar",
+          "blocks": {
+            "announcement-bar-0": {
+              "type": "announcement",
+              "settings": {
+              }
+            }
+          },
+          "block_order": [
+            "announcement-bar-0"
+          ],
+          "settings": {
+            "bg_color": "#003DA5",
+            "text_color": "#fff"
+          }
+        }
+      }
+    },
+    "Craft": {
+      "colors_solid_button_labels": "#EFECEC",
+      "colors_accent_1": "#2A332F",
+      "colors_accent_2": "#476154",
+      "colors_text": "#1C1A1A",
+      "colors_outline_button_labels": "#7B8382",
+      "colors_background_1": "#EFECEC",
+      "colors_background_2": "#C1BCAE",
+      "type_header_font": "americana_n4",
+      "type_body_font": "quattrocento_sans_n4",
+      "sections": {
+        "footer": {
+          "type": "footer",
+          "settings": {
+          }
+        }
+      }
+    }
+  }
+}

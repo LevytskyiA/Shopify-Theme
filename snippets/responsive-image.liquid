@@ -1,0 +1,40 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+    Snippet: Responsive image.
+
+    - Variables accepted:
+    -- image: {Object} Image object.
+    -- image_class: {String} Class name of the <img>.
+    -- image_width: {String} Image width e.g desktop: '1500x', mobile: '750x'.
+
+    - How to use:
+    -- To use in liquid, copy the following lines and update variables:
+    {% render 'responsive-image' with
+      image: section.settings.image,
+      image_class: 'css-class',
+      image_width: '1500x'
+    %}
+  ------------------------------------------------------------------------------
+{% endcomment %}
+<img
+  srcset="
+    {%- if image.width >= 375 -%}{{ image | image_url: width: '375w' }},{%- endif -%}
+    {%- if image.width >= 750 -%}{{ image | image_url: width: '750w' }},{%- endif -%}
+    {%- if image.width >= 1100 -%}{{ image | image_url: width: '1100w' }},{%- endif -%}
+    {%- if image.width >= 1500 -%}{{ image | image_url: width: '1500w' }},{%- endif -%}
+    {%- if image.width >= 1780 -%}{{ image | image_url: width: '1780w' }},{%- endif -%}
+    {%- if image.width >= 2000 -%}{{ image | image_url: width: '2000w' }},{%- endif -%}
+    {%- if image.width >= 3000 -%}{{ image | image_url: width: '3000w' }},{%- endif -%}
+    {%- if image.width >= 3840 -%}{{ image | image_url: width: '3840w' }},{%- endif -%}
+    {{ image | image_url: width: image_width }} {{ image.width }}w
+  "
+  sizes="100vw"
+  src="{{ image | image_url: width: image_width }}"
+  loading="lazy"
+  class="{{ image_class }}"
+  data-media-id="{{ image | image_url }}"
+  alt="{{ image.alt | escape }}"
+  width="{{ image.width }}"
+  height="{{ image.width | divided_by: image.aspect_ratio }}"
+  {% if custom_attribute %}{{ custom_attribute }}{% endif %}
+>

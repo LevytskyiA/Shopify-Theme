@@ -1,0 +1,241 @@
+<style>
+  #shopify-section-{{section.id}} {
+    padding-top:{{section.settings.desktop_padding_top}}px;
+    padding-bottom: {{section.settings.desktop_padding_bottom}}px
+  }
+
+  #shopify-section-{{section.id}} #products-grid {
+    row-gap: {{section.settings.desktop_row_gap}}px;
+    column-gap: {{section.settings.desktop_column_gap}}px;
+  }
+
+
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+
+    padding-top:{{section.settings.mobile_padding_top}}px;
+    padding-bottom: {{section.settings.mobile_padding_bottom}}px
+  }
+  #shopify-section-{{section.id}} .grid {
+    row-gap: {{section.settings.mobile_row_gap}}px;
+    column-gap: {{section.settings.mobile_column_gap}}px;
+  }
+  }
+</style>
+
+<collection-template
+  class='block bg-white {{ section.settings.desktop_max_width }} mx-auto'
+  data-handle='{{collection.handle}}'
+>
+  <nav aria-label='Breadcrumb'>
+    <ol role='list' class='mx-auto flex items-center pt-8'>
+      <li class='block pr-2'>
+        <a href='/' class='text-sm text-dark hover:text-gold'>Home</a>
+      </li>
+      <svg xmlns='http://www.w3.org/2000/svg' width='4' height='6' viewBox='0 0 4 6' fill='none'>
+        <path d="M0.49 5.838H1.442L3.206 3.416L1.442 0.994H0.49L2.212 3.416L0.49 5.838Z" fill="#151515"/>
+      </svg>
+
+      <li class='block px-2'>
+        <a
+          href='{{collection.url}}'
+          aria-current='page'
+          class='text-sm text-dark hover:text-gold'
+        >
+          {{- collection.title -}}
+        </a>
+      </li>
+    </ol>
+  </nav>
+
+  {% include 'filters' %}
+
+  <div class='flex justify-between items-center mt-10'>
+    <h1 class='text-dark uppercase text-[28px] sm:text-[40px] lg:text-[48px] font-bold'>{{ collection.title }}</h1>
+    <div class='flex items-center'>
+      <div class='hidden lg:block'>
+        {% include 'sorting' %}
+      </div>
+      <div class='lg:hidden'>
+        <span class='grid-view-1 cursor-pointer'>
+          <svg
+            class='pointer-events-none'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <rect x="3" y="3" width="18" height="18" stroke="#151515" stroke-width="2"/>
+            <line x1="21" y1="12" x2="2" y2="12" stroke="#151515" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class='grid-view-2 hidden cursor-pointer'>
+          <svg
+            class='pointer-events-none'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <rect x="3" y="3" width="18" height="18" stroke="#151515" stroke-width="2"/>
+            <line x1="12" y1="3" x2="12" y2="22" stroke="#151515" stroke-width="2"/>
+            <line x1="21" y1="12" x2="2" y2="12" stroke="#151515" stroke-width="2"/>
+          </svg>
+        </span>
+      </div>
+      <button
+        class='ml-[20px] lg:ml-[35px] cursor-pointer open-filters p-0 border-0'
+        aria-label='Open Filter'
+        tabindex='0'
+      >
+        <svg
+          class='pointer-events-none'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='none'
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          <path d="M3 17.25L6 17.25" stroke="#151515" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+          <path d="M9.75 17.25L21 17.25M9.75 17.25L9.75 21M9.75 17.25L9.75 13.5" stroke="#151515" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+          <path d="M21 6.75L18 6.75" stroke="#151515" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+          <path d="M14.25 6.75L3 6.74998M14.25 6.75L14.25 10.5M14.25 6.75L14.25 3" stroke="#151515" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <products-grid
+    id='products-grid'
+    class='pt-6 lg:pt-10 h-full items-grid relative grid grid-cols-{{section.settings.mobile_grid_columns}} md:grid-cols-{{section.settings.desktop_grid_columns}} xl:grid-cols-{{section.settings.extra_wide_desktop_grid_columns}} gap-[2px] sm:gap-4 bg-white transition duration-500'
+  >
+    {% for product in collection.products %}
+      {% render 'product-card',
+        product_card_product: product,
+        show_secondary_image: true,
+        media_size: 'square',
+        show_vendor: true
+      %}
+    {% endfor %}
+  </products-grid>
+  <div class='flex justify-center'>
+    <div class='animated-button-block-hero !block cursor-pointer mt-6'>
+      <button class='collection-link font-bold button-white block uppercase text-base load-more hidden'>
+        load more
+      </button>
+    </div>
+  </div>
+</collection-template>
+
+{% schema %}
+{
+  "name": "Collection",
+  "class": "px-6 px-16-desktop bg-white",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "desktop_max_width",
+      "options": [
+        {
+          "value": "max-w-medium",
+          "label": "Medium Width Desktop"
+        },
+        {
+          "value": "max-w-small",
+          "label": "Small Width Desktop"
+        },
+        {
+          "value": "max-w-full",
+          "label": "Full Width Desktop"
+        }
+      ],
+      "default": "max-w-full",
+      "label": "Full Width Desktop"
+    },
+    {
+      "type": "number",
+      "default": 0,
+      "label": "Desktop Section Top Padding",
+      "id": "desktop_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 0,
+      "label": "Desktop Section Bottom Padding",
+      "id": "desktop_padding_bottom"
+    },
+    {
+      "type": "number",
+      "default": 0,
+      "label": "Mobile Section Top Padding",
+      "id": "mobile_padding_top"
+    },
+    {
+      "type": "number",
+      "default": 0,
+      "label": "Mobile Section Bottom Padding",
+      "id": "mobile_padding_bottom"
+    },
+    {
+      "type": "header",
+      "content": "Grid settings"
+    },
+    {
+      "type": "number",
+      "default": 5,
+      "label": "Number of columns on extra large desktop",
+      "id": "extra_wide_desktop_grid_columns",
+      "info": "Only a maximum of 4 columns will work"
+    },
+    {
+      "type": "number",
+      "default": 2,
+      "label": "Number of columns on desktop",
+      "id": "desktop_grid_columns",
+      "info": "Only a maximum of 4 columns will work"
+    },
+    {
+      "type": "number",
+      "default": 1,
+      "label": "Number of columns on mobile",
+      "id": "mobile_grid_columns",
+      "info": "Only a maximum of 4 columns will work"
+    },
+    {
+      "type": "number",
+      "default": 40,
+      "label": "Desktop Row Gap",
+      "id": "desktop_row_gap"
+    },
+    {
+      "type": "number",
+      "default": 16,
+      "label": "Mobile Row Gap",
+      "id": "mobile_row_gap"
+    },
+    {
+      "type": "number",
+      "default": 54,
+      "label": "Desktop Column Gap",
+      "id": "desktop_column_gap"
+    },
+    {
+      "type": "number",
+      "default": 16,
+      "label": "Mobile Column Gap",
+      "id": "mobile_column_gap"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection"
+    }
+  ]
+}
+{% endschema %}

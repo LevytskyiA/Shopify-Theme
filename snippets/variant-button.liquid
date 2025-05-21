@@ -1,0 +1,86 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+    Snippet: Variant Button
+
+    - Variables accepted:
+      -- product: {Object} Product object.
+    - How to use:
+      -- To use in liquid, copy the following lines and update variables:
+      {% render 'variant-button', product: product %}
+  ------------------------------------------------------------------------------
+{% endcomment %}
+
+{% comment %} Capture all product details and pass it into the variant-button component as attributes {% endcomment %}
+{% comment %} If you needed to pass in any data you would do so here, i.e metafields etc. {% endcomment %}
+{% capture first_available_variant %}
+        [
+          {% for option in product.selected_or_first_available_variant.options %}
+            {
+              'option{{forloop.index}}':'{{ option | replace: '"', '/quote/' | replace: "'", '/apos/' }}'
+            }{% unless forloop.last == true%},{% endunless %}
+
+          {% endfor %}
+        ]
+  {% endcapture %}
+{% capture variants %}
+  [
+    {%- for variant in product.variants -%}
+        {
+          'available': {{variant.available }},
+          'compare_at_price': {% unless variant.compare_at_price == blank %}{{ variant.compare_at_price }}{% else %}null{% endunless %},
+          'featured_image': {% unless variant.featured_image == blank %}'{{ variant.featured_image | image_url }}'{% else %}null{% endunless %},
+          'id': {{ variant.id }},
+          'inventory_management': '{{ variant.inventory_management }}',
+          'name': '{{ variant.name }}',
+          'currency': '{{ cart.currency.iso_code }}',
+          'symbol': '{{ cart.currency.symbol }}',
+          'option1': {% unless variant.option1 == blank %}'{{ variant.option1 | replace: '"', '/quote/' | replace: "'", '/apos/'  }}'{% else %}null{% endunless %},
+          'option2': {% unless variant.option2 == blank %}'{{ variant.option2 | replace: '"', '/quote/' | replace: "'", '/apos/'  }}'{% else %}null{% endunless %},
+          'option3': {% unless variant.option3 == blank %}'{{ variant.option3 | replace: '"', '/quote/' | replace: "'", '/apos/'  }}'{% else %}null{% endunless %},
+          'options': [
+            {% for option in variant.options -%}
+              '{{ option | replace: '"', '/quote/' | replace: "'", '/apos/'  }}'{% unless forloop.last == true%},{% endunless %}
+            {% endfor %}
+          ],
+          'price': {{ variant.price }},
+          'public_title': '{{ variant.title | replace: '"', '/quote/' | replace: "'", '/apos/' }}',
+
+          'sku': '{{ variant.sku }}',
+          'taxable': {{variant.taxable}},
+          'title': '{{variant.title | replace: '"', '/quote/' | replace: "'", '/apos/' }}',
+          'secondary_image': {% unless variant.metafields.custom.secondary_variant_image == blank %}{{ variant.metafields.custom.secondary_variant_image.value | json | escape }}{% else %}null{% endunless %},
+          'weight': {{ variant.weight }}
+
+        }{% unless forloop.last == true%},{% endunless %}
+      {% endfor %}
+    ]
+  {% endcapture %}
+
+{% capture product_data %}
+    {
+      'featured_image': {% unless variant.featured_image == blank %}'{{ product.featured_image | image_url: 'master' }}'{% else %}null{% endunless %},
+      'handle': '{{ product.handle }}',
+      'options': [
+
+        {% for option in product.options_with_values -%}
+            { 'name': '{{ option.name }}', 'values': [
+                {%- for value in option.values -%}
+                    '{{ value | replace: '"', '/quote/' | replace: "'", '/apos/' }}'{% unless forloop.last == true%},{% endunless %}
+                {% endfor %}
+            ]}{% unless forloop.last == true%},{% endunless %}
+        {% endfor %}
+      ],
+      'title': '{{ product.title | replace: '"', '/quote/' | replace: "'", '/apos/' }}',
+      'available': {{ product.available }}
+
+    }
+{% endcapture %}
+
+<variant-button
+  id="product-options"
+  data-handle="{{product.handle}}"
+  data-variant="{{product.first_available_variant.id}}"
+  js-first-available-variant="{{ first_available_variant }}"
+  js-variants="{{ variants }}"
+  js-product="{{ product_data }}"
+></variant-button>

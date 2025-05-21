@@ -1,0 +1,28 @@
+import '../css/app.scss'
+import '../css/tailwind.css'
+
+import '../../scripts/sections/article-comments.js'
+import '../../scripts/sections/announcement-bar.js'
+import '../../scripts/sections/buy-button.js'
+import '../../scripts/sections/customer-addresses.js'
+
+
+import '../../scripts/sections/collection-facets.js'
+import '../../scripts/sections/collection-card.js'
+import '../../scripts/sections/lazyloading.js'
+import '../../scripts/sections/blog-filters.js'
+import '../../scripts/sections/featured-collection.js'
+import '../../scripts/sections/predictive-search.js'
+import '../../scripts/sections/product-card.js'
+import '../../scripts/sections/product-gallery.js'
+import '../../scripts/sections/mobile-filters.js'
+import '../../scripts/sections/mobile-menu.js'
+import '../../scripts/sections/search-icon.js'
+import '../../scripts/sections/search-template.js'
+import '../../scripts/sections/side-cart.js'
+import '../../scripts/sections/variant-button.js'
+import '../../scripts/sections/variant-select.js'
+import '../../scripts/sections/quantity-input.js'
+import '../../scripts/sections/product-wall'
+
+import '../../scripts/layout/theme'
